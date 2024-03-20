@@ -16,7 +16,7 @@ func _ready():
 	text += "\n\tSource Origin: " + discord.source_origin
 
 func _packet_received(opcode, data):
-	text += "\n= Packet received! ="
+	text += "\n========== Packet received! =========="
 	text += "\nOP:   " + str(opcode)
 	text += "\nDATA: " + str(data)
-	text += "\n===================="
+	text += "\n======================================"

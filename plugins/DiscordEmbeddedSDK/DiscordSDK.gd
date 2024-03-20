@@ -3,6 +3,19 @@ extends Node
 
 signal packet_received
 
+signal dispatch_ready
+signal dispatch_error
+signal dispatch_voice_state_update
+signal dispatch_speaking_start
+signal dispatch_speaking_stop
+signal dispatch_activity_layout_mode_update
+signal dispatch_orientation_update
+signal dispatch_current_user_update
+signal dispatch_thermal_state_update
+signal dispatch_activity_instance_participants_update
+signal dispatch_entitlement_create
+signal dispatch_any
+
 var callback_func : JavaScriptObject = JavaScript.create_callback(self, "_handle_message");
 var frame_id : String
 var instance_id : String
@@ -14,9 +27,35 @@ var platform : String
 var source : JavaScriptObject
 var source_origin : String
 
+var packet_response_buffer: Array
+
+var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
+	"ACTIVITY_LAYOUT_MODE_UPDATE", "ORIENTATION_UPDATE", "CURRENT_USER_UPDATE",
+	"THERMAL_STATE_UPDATE", "ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE", "ENTITLEMENT_CREATE"]
+
 func _handle_message(event):
-	var data_json = JavaScript.get_interface("JSON").stringify(event[0].data)
-	emit_signal("packet_received", event[0].data[0], JSON.parse(data_json).result);
+	var data_json = JavaScript.get_interface("JSON").stringify(event[0].data[1])
+	var data = JSON.parse(data_json).result
+	
+	# Add to the packet response buffer so we can access them from functions later on
+	if (event[0].data[0] == 1): # Opcode.FRAME
+		if (data["cmd"] == "DISPATCH"):
+			if (data["evt"] == "READY"):
+				commandAuthorize()
+			_handle_dispatch(data)
+		elif (data["nonce"] != null):
+			print("_handle_message: putting cmd:" + data["cmd"] + " in packet_response_buffer")
+			print("full packet: " + str(data))
+			packet_response_buffer.append(data)
+	
+	# TODO: maybe dont send this if packet is a dispatch packet
+	emit_signal("packet_received", event[0].data[0], data);
+
+func _handle_dispatch(data):
+	print("Dispatch event fired!")
+	print("event: " + data["evt"])
+	print("data : " + str(data["data"]))
+	print("=====================")
 
 func _ready():
 	JavaScript.get_interface("window").addEventListener("message", callback_func);
@@ -52,19 +91,86 @@ func init(client_id: String):
 	source_origin = JavaScript.eval("!!document.referrer ? document.referrer : '*'")
 	handshake()
 
-func handshake():
-	print("Shaking hands")
+func sendMessage(opcode, body):
 	var data = [
-		0, # Opcodes.HANDSHAKE
-		{
-			"v": 1,
-			"encoding": "json",
-			"client_id": client_id,
-			"frame_id": frame_id
-		}
+		opcode,
+		body
 	]
-	print("data: ")
-	print(JSON.print(data))
-	
+	print("postMessage: " + JSON.print(data))
 	JavaScript.eval("window.source.postMessage(" + JSON.print(data).replace("'", "\\'") + ", '*')", false)
 	#source.postMessage(data, source_origin) # i hate this i hate this i hate this
+
+func sendCommand(cmd, args, nonce):
+	sendMessage(1, {
+		"cmd": cmd,
+		"args": args,
+		"nonce": nonce
+	})
+	
+func _gen_nonce():
+	var chars = "0123456789abcdef"
+	var output_string := ""
+
+	for i in range(8):
+		output_string += chars[randi() % chars.length()]
+	output_string += "-"
+	for i in range(4):
+		output_string += chars[randi() % chars.length()]
+	output_string += "-"
+	for i in range(4):
+		output_string += chars[randi() % chars.length()]
+	output_string += "-"
+	for i in range(4):
+		output_string += chars[randi() % chars.length()]
+	output_string += "-"
+	for i in range(12):
+		output_string += chars[randi() % chars.length()]
+
+	return output_string
+
+func _subscribe_to_events():
+	for event in _events:
+		sendMessage(1, {
+			"cmd": "SUBSCRIBE",
+			"evt": event,
+			"nonce": _gen_nonce()
+		})
+
+func handshake():
+	print("Shaking hands")
+	sendMessage(0, {
+		"v": 1,
+		"encoding": "json",
+		"client_id": client_id,
+		"frame_id": frame_id
+	})
+
+func _wait_for_nonce(nonce):
+	var noMatches = true
+	var packet = null
+	while noMatches:
+		yield(self, "packet_received")
+		for i in range(packet_response_buffer.size()):
+			var tmppacket = packet_response_buffer[i]
+			if (tmppacket == null):
+				continue
+			if (tmppacket["nonce"] == nonce):
+				noMatches = false
+				packet = tmppacket
+				packet_response_buffer.remove(i)
+				break
+	return packet
+
+func commandAuthorize():
+	var nonce = _gen_nonce()
+	sendCommand("AUTHORIZE", {
+		"client_id": client_id,
+		"prompt": "none",
+		"response_type": "code",
+		"scope": ["identify", "rpc.activities.write"],
+		"state": ""
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	print("commandAuthorize success! packet: " + str(typeof(packet)) + "/" + str(packet))
+	return packet
