@@ -118,9 +118,11 @@ func sendMessage(opcode, body):
 		opcode,
 		body
 	]
-	print("postMessage: " + JSON.print(data))
+	# note about this, source.postMessage doesn't work, because `data` somehow 
+	# turns into `undefined` somewhere. not sure how to fix, but this works
+	# for now.
 	JavaScript.eval("window.source.postMessage(" + JSON.print(data).replace("'", "\\'") + ", '*')", false)
-	#source.postMessage(data, source_origin) # i hate this i hate this i hate this
+	#source.postMessage(data, "*")
 
 func sendCommand(cmd, args, nonce):
 	sendMessage(1, {
