@@ -187,7 +187,7 @@ func _wait_for_nonce(nonce):
 			break
 	return packet["data"]
 
-func commandAuthorize(response_type: String, scopes: Array, state: String):
+func command_authorize(response_type: String, scopes: Array, state: String):
 	var nonce = _gen_nonce()
 	sendCommand("AUTHORIZE", {
 		"client_id": client_id,
@@ -200,11 +200,177 @@ func commandAuthorize(response_type: String, scopes: Array, state: String):
 	var packet = yield(_wait_for_nonce(nonce), "completed")
 	return packet
 
-func commandAuthenticate(access_token: String):
+func command_authenticate(access_token: String):
 	var nonce = _gen_nonce()
 	sendCommand("AUTHENTICATE", {
 		"access_token": access_token
 	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+func command_capture_log(level: String, message: String):
+	var nonce = _gen_nonce()
+	sendCommand("CAPTURE_LOG", {
+		"level": level,
+		"message": message
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+func command_encourage_hardware_acceleration():
+	var nonce = _gen_nonce()
+	sendCommand("ENCOURAGE_HW_ACCELERATION", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_get_channel(id: String):
+	var nonce = _gen_nonce()
+	sendCommand("GET_CHANNEL", {
+		"channel_id": id
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_get_channel_permissions():
+	var nonce = _gen_nonce()
+	sendCommand("GET_CHANNEL_PERMISSIONS", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_get_entitlements_embedded():
+	var nonce = _gen_nonce()
+	sendCommand("GET_ENTITLEMENTS_EMBEDDED", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_get_instance_connected_participants():
+	var nonce = _gen_nonce()
+	sendCommand("GET_ACTIVITY_INSTANCE_CONNECTED_PARTICIPANTS", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_get_platform_behaviors():
+	var nonce = _gen_nonce()
+	sendCommand("GET_PLATFORM_BEHAVIORS", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_get_skus():
+	var nonce = _gen_nonce()
+	sendCommand("GET_SKUS_EMBEDDED", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_initiate_image_upload():
+	var nonce = _gen_nonce()
+	sendCommand("INITIATE_IMAGE_UPLOAD", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_open_external_link(url: String):
+	var nonce = _gen_nonce()
+	sendCommand("OPEN_EXTERNAL_LINK", {
+		"url": url
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_open_invite_dialog():
+	var nonce = _gen_nonce()
+	sendCommand("OPEN_INVITE_DIALOG", {}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_open_share_moment_dialog(media_url: String):
+	var nonce = _gen_nonce()
+	sendCommand("OPEN_SHARE_MOMENT_DIALOG", {
+		"mediaUrl": media_url
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_set_activity(state: String, details: String, timestamps: Dictionary = {}, assets: Dictionary = {}, party: Dictionary = {}, secrets: Dictionary = {}, instance: bool = false):
+	var nonce = _gen_nonce()
+	sendCommand("SET_ACTIVITY", {
+		"activity": {
+			"state": state,
+			"details": details,
+			"timestamps": timestamps,
+			"assets": assets,
+			"party": party,
+			"secrets": secrets,
+			"instance": instance
+		}
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_set_config(user_interactive_pip: bool):
+	var nonce = _gen_nonce()
+	sendCommand("SET_CONFIG", {
+		"user_interactive_pip": user_interactive_pip
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+
+# UNHANDLED: -1
+# PORTRAIT: 0
+# LANDSCAPE: 1
+func command_set_orientation_lock_state(lock_state: int, pip_lock_state: int, grid_lock_state: int):
+	var nonce = _gen_nonce()
+	sendCommand("SET_ORIENTATION_LOCK_STATE", {
+		"lock_state": lock_state,
+		"pip_lock_state": pip_lock_state,
+		"grid_lock_state": grid_lock_state
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_start_purchase(sku_id: String, pid: int):
+	var nonce = _gen_nonce()
+	sendCommand("START_PURCHASE", {
+		"sku_id": sku_id,
+		"pid": pid
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+
+func command_user_settings_get_locale():
+	var nonce = _gen_nonce()
+	sendCommand("USER_SETTINGS_GET_LOCALE", {}, nonce)
 	
 	var packet = yield(_wait_for_nonce(nonce), "completed")
 	return packet
