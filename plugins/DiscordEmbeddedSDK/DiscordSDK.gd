@@ -29,6 +29,7 @@ var source : JavaScriptObject
 var source_origin : String
 
 var ready = false
+var subscribed = false
 
 var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
 	"ACTIVITY_LAYOUT_MODE_UPDATE", "ORIENTATION_UPDATE", "CURRENT_USER_UPDATE",
@@ -149,13 +150,15 @@ func _gen_nonce():
 
 	return output_string
 
-func _subscribe_to_events():
+func subscribe_to_events():
+	if subscribed: return
 	for event in _events:
 		sendMessage(1, {
 			"cmd": "SUBSCRIBE",
 			"evt": event,
 			"nonce": _gen_nonce()
 		})
+	subscribed = true
 
 func handshake():
 	print("Shaking hands")
@@ -184,14 +187,23 @@ func _wait_for_nonce(nonce):
 			break
 	return packet["data"]
 
-func commandAuthorize():
+func commandAuthorize(response_type: String, scopes: Array, state: String):
 	var nonce = _gen_nonce()
 	sendCommand("AUTHORIZE", {
 		"client_id": client_id,
 		"prompt": "none",
-		"response_type": "code",
-		"scope": ["identify", "rpc.activities.write"],
-		"state": ""
+		"response_type": response_type,
+		"scope": scopes,
+		"state": state
+	}, nonce)
+	
+	var packet = yield(_wait_for_nonce(nonce), "completed")
+	return packet
+
+func commandAuthenticate(access_token: String):
+	var nonce = _gen_nonce()
+	sendCommand("AUTHENTICATE", {
+		"access_token": access_token
 	}, nonce)
 	
 	var packet = yield(_wait_for_nonce(nonce), "completed")
