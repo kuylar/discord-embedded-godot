@@ -9,17 +9,10 @@ func _ready():
 	text += "\nWaiting for ready()"
 	yield(discord, "dispatch_ready")
 	text += "\nReady called!\n"
-	text += "\nDiscordSDK.init():"
-	text += "\n\tFrame ID: " + discord.frame_id
-	text += "\n\tInstance ID: " + discord.instance_id
-	text += "\n\tPlatform: " + discord.platform
-	text += "\n\tGuild ID: " + discord.guild_id
-	text += "\n\tChannel ID: " + discord.channel_id
-	text += "\n\tClient ID: " + discord.client_id
-	text += "\n\t============================================"
-	text += "\n\tSource Origin: " + discord.source_origin
-	
-	discord.commandAuthorize()
+	text += "\n\nGetting auth code"
+	var auth = yield(discord.commandAuthorize(), "completed")
+	text += "\n\n\tData: " + str(auth)
+	text += "\n\n\tAuth: " + auth["code"]
 
 func _packet_received(opcode, data):
 	text += "\n========== Packet received! =========="

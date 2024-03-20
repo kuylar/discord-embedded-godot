@@ -2,6 +2,7 @@ class_name DiscordSDK
 extends Node
 
 signal packet_received
+signal _command_response_received
 
 signal dispatch_ready
 signal dispatch_error
@@ -27,8 +28,6 @@ var platform : String
 var source : JavaScriptObject
 var source_origin : String
 
-var packet_response_buffer: Array
-
 var ready = false
 
 var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
@@ -44,8 +43,7 @@ func _handle_message(event):
 		if (data["cmd"] == "DISPATCH"):
 			_handle_dispatch(data)
 		elif (data["nonce"] != null):
-			packet_response_buffer.append(data)
-			print("_handle_message: packet received, buffer size: " + str(packet_response_buffer.size()))
+			emit_signal("_command_response_received", data)
 		else:
 			emit_signal("packet_received", event[0].data[0], data);
 	else:
@@ -178,17 +176,13 @@ func _wait_for_nonce(nonce):
 	var noMatches = true
 	var packet = null
 	while noMatches:
-		yield(self, "packet_received")
-		for i in range(packet_response_buffer.size()):
-			var tmppacket = packet_response_buffer[i]
-			if (tmppacket == null):
-				continue
-			if (tmppacket["nonce"] == nonce):
-				noMatches = false
-				packet = tmppacket
-				packet_response_buffer.remove(i)
-				break
-	return packet
+		# TODO: just get packet from this event instead of using a buffer
+		var tmppacket = yield(self, "_command_response_received")
+		if (tmppacket["nonce"] == nonce):
+			noMatches = false
+			packet = tmppacket
+			break
+	return packet["data"]
 
 func commandAuthorize():
 	var nonce = _gen_nonce()
