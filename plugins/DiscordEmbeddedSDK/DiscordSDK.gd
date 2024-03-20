@@ -29,6 +29,8 @@ var source_origin : String
 
 var packet_response_buffer: Array
 
+var ready = false
+
 var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
 	"ACTIVITY_LAYOUT_MODE_UPDATE", "ORIENTATION_UPDATE", "CURRENT_USER_UPDATE",
 	"THERMAL_STATE_UPDATE", "ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE", "ENTITLEMENT_CREATE"]
@@ -40,26 +42,47 @@ func _handle_message(event):
 	# Add to the packet response buffer so we can access them from functions later on
 	if (event[0].data[0] == 1): # Opcode.FRAME
 		if (data["cmd"] == "DISPATCH"):
-			if (data["evt"] == "READY"):
-				commandAuthorize()
 			_handle_dispatch(data)
 		elif (data["nonce"] != null):
-			print("_handle_message: putting cmd:" + data["cmd"] + " in packet_response_buffer")
-			print("full packet: " + str(data))
 			packet_response_buffer.append(data)
-	
-	# TODO: maybe dont send this if packet is a dispatch packet
-	emit_signal("packet_received", event[0].data[0], data);
+			print("_handle_message: packet received, buffer size: " + str(packet_response_buffer.size()))
+		else:
+			emit_signal("packet_received", event[0].data[0], data);
+	else:
+		emit_signal("packet_received", event[0].data[0], data);
 
 func _handle_dispatch(data):
-	print("Dispatch event fired!")
-	print("event: " + data["evt"])
-	print("data : " + str(data["data"]))
-	print("=====================")
+	var event = data["evt"]
+	emit_signal("dispatch_any", event, data["data"])
+	match event:
+		"READY":
+			ready = true
+			emit_signal("dispatch_ready", data["data"])
+		"ERROR":
+			emit_signal("dispatch_error", data["data"])
+		"VOICE_STATE_UPDATE":
+			emit_signal("dispatch_voice_state_update", data["data"])
+		"SPEAKING_START":
+			emit_signal("dispatch_speaking_start", data["data"])
+		"SPEAKING_STOP":
+			emit_signal("dispatch_speaking_stop", data["data"])
+		"ACTIVITY_LAYOUT_MODE_UPDATE":
+			emit_signal("dispatch_activity_layout_mode_update", data["data"])
+		"ORIENTATION_UPDATE":
+			emit_signal("dispatch_orientation_update", data["data"])
+		"CURRENT_USER_UPDATE":
+			emit_signal("dispatch_current_user_update", data["data"])
+		"THERMAL_STATE_UPDATE":
+			emit_signal("dispatch_thermal_state_update", data["data"])
+		"ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE":
+			emit_signal("dispatch_activity_instance_participants_update", data["data"])
+		"ENTITLEMENT_CREATE":
+			emit_signal("dispatch_entitlement_create", data["data"])
+		_:
+			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
 func _ready():
 	JavaScript.get_interface("window").addEventListener("message", callback_func);
-	JavaScript.eval("window.addEventListener('message', console.log)")
 
 func init(client_id: String):
 	var query_parts = str(JavaScript.eval("window.location.search")).trim_prefix("?").split("&", false)
@@ -145,6 +168,12 @@ func handshake():
 		"frame_id": frame_id
 	})
 
+func ready():
+	if (ready):
+		return
+	else:
+		yield(self, "dispatch_ready")
+
 func _wait_for_nonce(nonce):
 	var noMatches = true
 	var packet = null
@@ -172,5 +201,4 @@ func commandAuthorize():
 	}, nonce)
 	
 	var packet = yield(_wait_for_nonce(nonce), "completed")
-	print("commandAuthorize success! packet: " + str(typeof(packet)) + "/" + str(packet))
 	return packet
