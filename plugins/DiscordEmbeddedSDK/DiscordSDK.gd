@@ -17,7 +17,7 @@ signal dispatch_activity_instance_participants_update
 signal dispatch_entitlement_create
 signal dispatch_any
 
-var callback_func : JavaScriptObject = JavaScript.create_callback(self, "_handle_message");
+var callback_func : JavaScriptObject = JavaScriptBridge.create_callback(_handle_message);
 var frame_id : String
 var instance_id : String
 var channel_id : String
@@ -28,7 +28,7 @@ var platform : String
 var source : JavaScriptObject
 var source_origin : String
 
-var ready = false
+var is_ready = false
 var subscribed = false
 
 var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
@@ -36,8 +36,9 @@ var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
 	"THERMAL_STATE_UPDATE", "ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE", "ENTITLEMENT_CREATE"]
 
 func _handle_message(event):
-	var data_json = JavaScript.get_interface("JSON").stringify(event[0].data[1])
-	var data = JSON.parse(data_json).result
+	var data_json = JavaScriptBridge.get_interface("JSON").stringify(event[0].data[1])
+	var test_json_conv = JSON.new()
+	var data = test_json_conv.parse_string(data_json)
 	
 	# Add to the packet response buffer so we can access them from functions later on
 	if (event[0].data[0] == 1): # Opcode.FRAME
@@ -55,7 +56,7 @@ func _handle_dispatch(data):
 	emit_signal("dispatch_any", event, data["data"])
 	match event:
 		"READY":
-			ready = true
+			is_ready = true
 			emit_signal("dispatch_ready", data["data"])
 		"ERROR":
 			emit_signal("dispatch_error", data["data"])
@@ -81,10 +82,10 @@ func _handle_dispatch(data):
 			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
 func _ready():
-	JavaScript.get_interface("window").addEventListener("message", callback_func);
+	JavaScriptBridge.get_interface("window").addEventListener("message", callback_func);
 
 func init(client_id: String):
-	var query_parts = str(JavaScript.eval("window.location.search")).trim_prefix("?").split("&", false)
+	var query_parts = str(JavaScriptBridge.eval("window.location.search")).trim_prefix("?").split("&", false)
 	var query_map = {}
 	for part in query_parts:
 		var parts = part.split("=")
@@ -104,13 +105,12 @@ func init(client_id: String):
 	guild_id = query_map["guild_id"]
 	self.client_id = client_id
 	
-	source = JavaScript.get_interface("window").parent.opener
+	source = JavaScriptBridge.get_interface("window").parent.opener
 	if (source == null):
-		print("source was null")
-		source = JavaScript.get_interface("window").parent
-	JavaScript.eval("window.source = window.parent.opener ?? window.parent", true)
+		source = JavaScriptBridge.get_interface("window").parent
+	JavaScriptBridge.eval("window.source = window.parent.opener ?? window.parent", true)
 	
-	source_origin = JavaScript.eval("!!document.referrer ? document.referrer : '*'")
+	source_origin = JavaScriptBridge.eval("!!document.referrer ? document.referrer : '*'")
 	handshake()
 
 func sendMessage(opcode, body):
@@ -121,7 +121,7 @@ func sendMessage(opcode, body):
 	# note about this, source.postMessage doesn't work, because `data` somehow 
 	# turns into `undefined` somewhere. not sure how to fix, but this works
 	# for now.
-	JavaScript.eval("window.source.postMessage(" + JSON.print(data).replace("'", "\\'") + ", '*')", false)
+	JavaScriptBridge.eval("window.source.postMessage(" + JSON.stringify(data).replace("'", "\\'") + ", '*')", false)
 	#source.postMessage(data, "*")
 
 func sendCommand(cmd, args, nonce):
@@ -172,17 +172,17 @@ func handshake():
 	})
 
 func ready():
-	if (ready):
+	if (is_ready):
 		return
 	else:
-		yield(self, "dispatch_ready")
+		await self.dispatch_ready
 
 func _wait_for_nonce(nonce):
 	var noMatches = true
 	var packet = null
 	while noMatches:
 		# TODO: just get packet from this event instead of using a buffer
-		var tmppacket = yield(self, "_command_response_received")
+		var tmppacket = await self._command_response_received
 		if (tmppacket["nonce"] == nonce):
 			noMatches = false
 			packet = tmppacket
@@ -199,7 +199,7 @@ func command_authorize(response_type: String, scopes: Array, state: String):
 		"state": state
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 func command_authenticate(access_token: String):
@@ -208,7 +208,7 @@ func command_authenticate(access_token: String):
 		"access_token": access_token
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 func command_capture_log(level: String, message: String):
@@ -218,14 +218,14 @@ func command_capture_log(level: String, message: String):
 		"message": message
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 func command_encourage_hardware_acceleration():
 	var nonce = _gen_nonce()
 	sendCommand("ENCOURAGE_HW_ACCELERATION", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -235,7 +235,7 @@ func command_get_channel(id: String):
 		"channel_id": id
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -243,7 +243,7 @@ func command_get_channel_permissions():
 	var nonce = _gen_nonce()
 	sendCommand("GET_CHANNEL_PERMISSIONS", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -251,7 +251,7 @@ func command_get_entitlements_embedded():
 	var nonce = _gen_nonce()
 	sendCommand("GET_ENTITLEMENTS_EMBEDDED", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -259,7 +259,7 @@ func command_get_instance_connected_participants():
 	var nonce = _gen_nonce()
 	sendCommand("GET_ACTIVITY_INSTANCE_CONNECTED_PARTICIPANTS", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -267,7 +267,7 @@ func command_get_platform_behaviors():
 	var nonce = _gen_nonce()
 	sendCommand("GET_PLATFORM_BEHAVIORS", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -275,7 +275,7 @@ func command_get_skus():
 	var nonce = _gen_nonce()
 	sendCommand("GET_SKUS_EMBEDDED", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -283,7 +283,7 @@ func command_initiate_image_upload():
 	var nonce = _gen_nonce()
 	sendCommand("INITIATE_IMAGE_UPLOAD", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -293,7 +293,7 @@ func command_open_external_link(url: String):
 		"url": url
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -301,7 +301,7 @@ func command_open_invite_dialog():
 	var nonce = _gen_nonce()
 	sendCommand("OPEN_INVITE_DIALOG", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -311,7 +311,7 @@ func command_open_share_moment_dialog(media_url: String):
 		"mediaUrl": media_url
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -329,7 +329,7 @@ func command_set_activity(state: String, details: String, timestamps: Dictionary
 		}
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -339,7 +339,7 @@ func command_set_config(user_interactive_pip: bool):
 		"user_interactive_pip": user_interactive_pip
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -355,7 +355,7 @@ func command_set_orientation_lock_state(lock_state: int, pip_lock_state: int, gr
 		"grid_lock_state": grid_lock_state
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -366,7 +366,7 @@ func command_start_purchase(sku_id: String, pid: int):
 		"pid": pid
 	}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
 
 
@@ -374,5 +374,5 @@ func command_user_settings_get_locale():
 	var nonce = _gen_nonce()
 	sendCommand("USER_SETTINGS_GET_LOCALE", {}, nonce)
 	
-	var packet = yield(_wait_for_nonce(nonce), "completed")
+	var packet = await _wait_for_nonce(nonce)
 	return packet
