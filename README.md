@@ -4,6 +4,8 @@ A Godot plugin/library to interact with the Discord Embedded App SDK from Web bu
 
 Documentation available in [the wiki](https://github.com/kuylar/discord-embedded-godot/wiki)
 
+This is the Godot 4 version of the SDK. Switch to the `master` branch to use the Godot 3 version instead.
+
 > [!NOTE]
 > Godot 4 builds will not work in Discord if you have thread support enabled. To disable threading, either use Godot 3 or use Godot 4.3 beta versions
 >
