@@ -6,6 +6,8 @@ Documentation available in [the wiki](https://github.com/kuylar/discord-embedded
 
 This is the Godot 4 version of the SDK. Switch to the `master` branch to use the Godot 3 version instead.
 
+For support, you can visit our [Discord server](https://discord.gg/zHydENpSbr) and head to the #godot-discord-sdk-discussion channel.
+
 > [!NOTE]
 > Godot 4 builds will not work in Discord if you have thread support enabled. To disable threading, either use Godot 3 or use Godot 4.3 beta versions
 >
