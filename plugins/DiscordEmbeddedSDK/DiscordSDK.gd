@@ -81,7 +81,10 @@ func _handle_dispatch(data):
 			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
 func _ready():
-	JavaScript.get_interface("window").addEventListener("message", callback_func);
+	if (OS.has_feature("JavaScript")):
+		JavaScript.get_interface("window").addEventListener("message", callback_func);
+	else:
+		print("Not in a JavaScript environment. Discord SDK will not work.")
 
 func init(client_id: String):
 	var query_parts = str(JavaScript.eval("window.location.search")).trim_prefix("?").split("&", false)
