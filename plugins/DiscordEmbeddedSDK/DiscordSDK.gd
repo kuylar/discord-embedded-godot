@@ -30,6 +30,7 @@ var source_origin : String
 
 var is_ready = false
 var subscribed = false
+var in_js = false
 
 var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
 	"ACTIVITY_LAYOUT_MODE_UPDATE", "ORIENTATION_UPDATE", "CURRENT_USER_UPDATE",
@@ -82,9 +83,16 @@ func _handle_dispatch(data):
 			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
 func _ready():
-	JavaScriptBridge.get_interface("window").addEventListener("message", callback_func);
+	in_js = OS.has_feature("web")
+	if (in_js):
+		JavaScriptBridge.get_interface("window").addEventListener("message", callback_func);
+	else:
+		print("Not in a JavaScript environment. Discord SDK will not work.")
 
 func init(client_id: String):
+	if (not in_js):
+		print("Not in a JavaScript environment. Ignoring call to init()")
+		return
 	var query_parts = str(JavaScriptBridge.eval("window.location.search")).trim_prefix("?").split("&", false)
 	var query_map = {}
 	for part in query_parts:
@@ -114,6 +122,9 @@ func init(client_id: String):
 	handshake()
 
 func sendMessage(opcode, body):
+	if (not in_js):
+		print("Not in a JavaScript environment. Ignoring call to sendMessage()")
+		return
 	var data = [
 		opcode,
 		body
@@ -125,6 +136,9 @@ func sendMessage(opcode, body):
 	#source.postMessage(data, "*")
 
 func sendCommand(cmd, args, nonce):
+	if (not in_js):
+		print("Not in a JavaScript environment. Ignoring call to sendCommand()")
+		return
 	sendMessage(1, {
 		"cmd": cmd,
 		"args": args,
