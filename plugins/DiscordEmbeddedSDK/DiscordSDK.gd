@@ -83,7 +83,9 @@ func _handle_dispatch(data):
 			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
 func _ready():
-	in_js = OS.has_feature("web")
+	# For some reason, OS.has_feature("web") sometimes returns false in web
+	# Added a OS.get_name() check to be sure
+	in_js = OS.has_feature("web") || OS.get_name() == "Web"
 	if (in_js):
 		JavaScriptBridge.get_interface("window").addEventListener("message", callback_func);
 	else:
