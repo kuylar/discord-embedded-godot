@@ -169,11 +169,38 @@ func _gen_nonce():
 func subscribe_to_events():
 	if subscribed: return
 	for event in _events:
-		sendMessage(1, {
-			"cmd": "SUBSCRIBE",
-			"evt": event,
-			"nonce": _gen_nonce()
-		})
+		if (event != "SPEAKING_START" || 
+			event != "SPEAKING_STOP" || 
+			event != "VOICE_STATE_UPDATE"):
+			sendMessage(1, {
+				"cmd": "SUBSCRIBE",
+				"evt": event,
+				"nonce": _gen_nonce()
+			})
+	sendMessage(1, {
+		"cmd": "SUBSCRIBE",
+		"evt": "SPEAKING_START",
+		"args": {
+			"channel_id": channel_id
+		},
+		"nonce": _gen_nonce()
+	});
+	sendMessage(1, {
+		"cmd": "SUBSCRIBE",
+		"evt": "SPEAKING_STOP",
+		"args": {
+			"channel_id": channel_id
+		},
+		"nonce": _gen_nonce()
+	});
+	sendMessage(1, {
+		"cmd": "SUBSCRIBE",
+		"evt": "VOICE_STATE_UPDATE",
+		"args": {
+			"channel_id": channel_id
+		},
+		"nonce": _gen_nonce()
+	});
 	subscribed = true
 
 func handshake():
