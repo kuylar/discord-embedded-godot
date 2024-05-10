@@ -38,8 +38,7 @@ var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
 
 func _handle_message(event):
 	var data_json = JavaScriptBridge.get_interface("JSON").stringify(event[0].data[1])
-	var test_json_conv = JSON.new()
-	var data = test_json_conv.parse_string(data_json)
+	var data = JSON.parse_string(data_json)
 	
 	# Add to the packet response buffer so we can access them from functions later on
 	if (event[0].data[0] == 1): # Opcode.FRAME
