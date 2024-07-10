@@ -33,7 +33,7 @@ anchor_bottom = 1.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel/ScrollContainer"]
 margin_right = 250.0
-margin_bottom = 482.0
+margin_bottom = 506.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 3
 
@@ -166,6 +166,12 @@ margin_right = 250.0
 margin_bottom = 482.0
 text = "Get User Locale"
 
+[node name="ButtonQuit" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
+margin_top = 486.0
+margin_right = 250.0
+margin_bottom = 506.0
+text = "Quit"
+
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonCaptureLog" to="." method="_on_ButtonCaptureLog_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonEncourageHwAccel" to="." method="_on_ButtonEncourageHwAccel_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonGetChannel" to="." method="_on_ButtonGetChannel_pressed"]
@@ -183,3 +189,4 @@ text = "Get User Locale"
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonSetOrientationLockState" to="." method="_on_ButtonSetOrientationLockState_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonStartPurchase" to="." method="_on_ButtonStartPurchase_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonUserSettingsGetLocale" to="." method="_on_ButtonUserSettingsGetLocale_pressed"]
+[connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonQuit" to="." method="_on_ButtonQuit_pressed"]
