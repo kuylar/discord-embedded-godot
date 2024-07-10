@@ -18,7 +18,7 @@ func _ready():
 	text.text += "\nWaiting for ready()"
 	await discord.dispatch_ready
 	text.text += "\nGetting auth code"
-	var auth = await discord.command_authorize("code", ["identify", "guilds", "rpc.activities.write"], "")
+	var auth = await discord.command_authorize("code", ["identify", "guilds", "rpc.activities.write", "rpc.voice.read", "guilds.members.read"], "")
 	text.text += "\nGetting access token from server"
 	var hreq = HTTPRequest.new()
 	hreq.accept_gzip = false # ?? huh? https://forum.godotengine.org/t/-/37681/19
