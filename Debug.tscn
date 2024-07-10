@@ -94,7 +94,6 @@ text = "Get Channel Permissions"
 
 [node name="ButtonGetEntitlements" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-disabled = true
 text = "Get Entitlements"
 
 [node name="ButtonGetInstanceConnectedParticipants" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
@@ -107,7 +106,6 @@ text = "Get Platform Behaviors"
 
 [node name="ButtonGetSkus" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-disabled = true
 text = "Get SKUs"
 
 [node name="ButtonInitiateImageUpload" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
@@ -140,7 +138,6 @@ text = "Set Orientation Lock State"
 
 [node name="ButtonStartPurchase" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-disabled = true
 text = "Start Purchase"
 
 [node name="ButtonUserSettingsGetLocale" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
