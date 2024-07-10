@@ -131,3 +131,7 @@ func _on_ButtonStartPurchase_pressed():
 
 func _on_ButtonUserSettingsGetLocale_pressed():
 	text.text += "\n" + str(await discord.command_user_settings_get_locale())
+
+func _on_ButtonQuit_pressed():
+	text.text += "See you later!"
+	discord.close(1000, "See you next time!")

@@ -144,6 +144,10 @@ text = "Start Purchase"
 layout_mode = 2
 text = "Get User Locale"
 
+[node name="ButtonQuit" type="Button" parent="HBoxContainer/Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonCaptureLog" to="." method="_on_ButtonCaptureLog_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonEncourageHwAccel" to="." method="_on_ButtonEncourageHwAccel_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonGetChannel" to="." method="_on_ButtonGetChannel_pressed"]
@@ -161,3 +165,4 @@ text = "Get User Locale"
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonSetOrientationLockState" to="." method="_on_ButtonSetOrientationLockState_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonStartPurchase" to="." method="_on_ButtonStartPurchase_pressed"]
 [connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonUserSettingsGetLocale" to="." method="_on_ButtonUserSettingsGetLocale_pressed"]
+[connection signal="pressed" from="HBoxContainer/Panel/ScrollContainer/VBoxContainer/ButtonQuit" to="." method="_on_ButtonQuit_pressed"]

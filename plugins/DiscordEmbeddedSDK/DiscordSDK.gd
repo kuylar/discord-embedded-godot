@@ -192,6 +192,14 @@ func ready():
 	else:
 		await self.dispatch_ready
 
+func close(code: int, message: String):
+	# we dont wait for nonce here
+	sendMessage(2, {
+		"code": code,
+		"message": message,
+		"nonce": _gen_nonce()
+	})
+
 func _wait_for_nonce(nonce):
 	var noMatches = true
 	var packet = null
