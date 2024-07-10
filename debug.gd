@@ -18,7 +18,7 @@ func _ready():
 	text.text += "\nWaiting for ready()"
 	await discord.dispatch_ready
 	text.text += "\nGetting auth code"
-	var auth = await discord.command_authorize("code", ["identify", "guilds"], "")
+	var auth = await discord.command_authorize("code", ["identify", "guilds", "rpc.activities.write"], "")
 	text.text += "\nGetting access token from server"
 	var hreq = HTTPRequest.new()
 	hreq.accept_gzip = false # ?? huh? https://forum.godotengine.org/t/-/37681/19
@@ -59,13 +59,15 @@ func _user_updated(data):
 	add_child(http_request)
 	var http_error = http_request.request("https://cdn.discordapp.com/avatars/"+data["id"]+"/"+data["avatar"]+".png?size=64")
 	var response = await http_request.request_completed
+	print("loaded image?")
+	print(response[1])
 	
 	var image = Image.new()
 	var image_error = image.load_png_from_buffer(response[3])
+	print("image load status: " + str(image_error))
 	if image_error != OK:
 		print("An error occurred while trying to display the image.")
-	var texture = ImageTexture.new()
-	texture.create_from_image(image)
+	var texture = ImageTexture.create_from_image(image)
 	# Assign to the child TextureRect node
 	user_avatar.texture = texture
 	
@@ -84,7 +86,7 @@ func _on_ButtonGetChannelPermissions_pressed():
 	text.text += "\n" + str(await discord.command_get_channel_permissions())
 
 func _on_ButtonGetEntitlements_pressed():
-	text.text += "\nNot available in Developer Preview."
+	text.text += "\n" + str(await discord.command_get_entitlements_embedded())
 
 func _on_ButtonGetInstanceConnectedParticipants_pressed():
 	text.text += "\n" + str(await discord.command_get_instance_connected_participants())
@@ -93,7 +95,7 @@ func _on_ButtonGetPlatformBehaviors_pressed():
 	text.text += "\n" + str(await discord.command_get_platform_behaviors())
 
 func _on_ButtonGetSkus_pressed():
-	text.text += "\nNot available in Developer Preview."
+	text.text += "\n" + str(await discord.command_get_skus())
 
 func _on_ButtonInitiateImageUpload_pressed():
 	var upload = await discord.command_initiate_image_upload()
