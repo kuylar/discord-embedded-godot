@@ -15,6 +15,7 @@ signal dispatch_current_user_update
 signal dispatch_thermal_state_update
 signal dispatch_activity_instance_participants_update
 signal dispatch_entitlement_create
+signal dispatch_current_guild_member_update
 signal dispatch_any
 
 var callback_func : JavaScriptObject = JavaScriptBridge.create_callback(_handle_message);
@@ -34,7 +35,8 @@ var in_js = false
 
 var _events = ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
 	"ACTIVITY_LAYOUT_MODE_UPDATE", "ORIENTATION_UPDATE", "CURRENT_USER_UPDATE",
-	"THERMAL_STATE_UPDATE", "ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE", "ENTITLEMENT_CREATE"]
+	"THERMAL_STATE_UPDATE", "ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE", "ENTITLEMENT_CREATE",
+	"CURRENT_GUILD_MEMBER_UPDATE"]
 
 func _handle_message(event):
 	var data_json = JavaScriptBridge.get_interface("JSON").stringify(event[0].data[1])
@@ -78,6 +80,8 @@ func _handle_dispatch(data):
 			emit_signal("dispatch_activity_instance_participants_update", data["data"])
 		"ENTITLEMENT_CREATE":
 			emit_signal("dispatch_entitlement_create", data["data"])
+		"CURRENT_GUILD_MEMBER_UPDATE":
+			emit_signal("dispatch_current_guild_member_update", data["data"])
 		_:
 			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
@@ -173,6 +177,10 @@ func subscribe_to_events():
 		sendMessage(1, {
 			"cmd": "SUBSCRIBE",
 			"evt": event,
+			"args": {
+				"channel_id": channel_id,
+				"guild_id": guild_id
+			},
 			"nonce": _gen_nonce()
 		})
 	subscribed = true
