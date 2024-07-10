@@ -18,7 +18,7 @@ func _ready():
 	text.text += "\nWaiting for ready()"
 	yield(discord, "dispatch_ready")
 	text.text += "\nGetting auth code"
-	var auth = yield(discord.command_authorize("code", ["identify", "guilds"], ""), "completed")
+	var auth = yield(discord.command_authorize("code", ["identify", "guilds", "rpc.activities.write", "rpc.voice.read", "guilds.members.read"], ""), "completed")
 	text.text += "\nGetting access token from server"
 	var hreq = HTTPRequest.new()
 	add_child(hreq)
