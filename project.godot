@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="DiscordEmbeddedGodot"
-run/main_scene="res://Debug.tscn"
+run/main_scene="res://playground/playground.tscn"
 config/features=PackedStringArray("4.3")
 config/icon="res://icon.png"
 

@@ -21,10 +21,11 @@ signal dispatch_any
 var callback_func : JavaScriptObject = JavaScriptBridge.create_callback(_handle_message);
 var frame_id : String
 var instance_id : String
-var channel_id : String
-var guild_id : String
-var client_id : String
 var platform : String
+var channel_id : String
+var client_id : String
+var guild_id : String
+var user_id : String
 
 var source : JavaScriptObject
 var source_origin : String
@@ -73,6 +74,7 @@ func _handle_dispatch(data):
 		"ORIENTATION_UPDATE":
 			emit_signal("dispatch_orientation_update", data["data"])
 		"CURRENT_USER_UPDATE":
+			user_id = data["data"]["id"]
 			emit_signal("dispatch_current_user_update", data["data"])
 		"THERMAL_STATE_UPDATE":
 			emit_signal("dispatch_thermal_state_update", data["data"])
@@ -364,10 +366,10 @@ func command_set_activity(state: String, details: String, timestamps: Dictionary
 	return packet
 
 
-func command_set_config(user_interactive_pip: bool):
+func command_set_config(use_interactive_pip: bool):
 	var nonce = _gen_nonce()
 	sendCommand("SET_CONFIG", {
-		"user_interactive_pip": user_interactive_pip
+		"use_interactive_pip": use_interactive_pip
 	}, nonce)
 	
 	var packet = await _wait_for_nonce(nonce)

@@ -1,0 +1,548 @@
+[gd_scene load_steps=5 format=3 uid="uid://cpo3ygbiavdgb"]
+
+[ext_resource type="Texture2D" uid="uid://bw1ygjn8mbgck" path="res://icon.png" id="1_3ml1p"]
+[ext_resource type="Script" path="res://playground/playground.gd" id="1_jqnx3"]
+[ext_resource type="Script" path="res://playground/current_user.gd" id="2_m88sq"]
+[ext_resource type="Script" path="res://playground/participants_container.gd" id="2_rr0wr"]
+
+[node name="Playground" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jqnx3")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "Participants"
+horizontal_alignment = 1
+
+[node name="ParticipantsContainer" type="VBoxContainer" parent="HBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_rr0wr")
+
+[node name="InviteButton" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "+ Invite Others"
+
+[node name="CurrentUser" type="Panel" parent="HBoxContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+script = ExtResource("2_m88sq")
+
+[node name="Avatar" type="TextureRect" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -25.0
+offset_right = 55.0
+offset_bottom = 25.0
+grow_vertical = 2
+texture = ExtResource("1_3ml1p")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="RichTextLabel" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 5.0
+offset_right = 249.0
+offset_bottom = 28.0
+bbcode_enabled = true
+text = "DiscordEmbeddedGodot"
+
+[node name="Flags" type="RichTextLabel" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 30.0
+offset_right = 245.0
+offset_bottom = 53.0
+bbcode_enabled = true
+text = "[i]by @kuylar[/i]"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabContainer" type="TabContainer" parent="HBoxContainer/VSplitContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+current_tab = 1
+
+[node name="General" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="PipInteractivityState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+fit_to_longest_item = false
+item_count = 2
+popup/item_0/text = "PiP window is not interactive"
+popup/item_1/text = "PiP window is interactive"
+popup/item_1/id = 1
+
+[node name="SetConfigButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4"]
+layout_mode = 2
+text = "Set Config"
+
+[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="LogLevel" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 5
+popup/item_0/text = "Log"
+popup/item_1/text = "Warning"
+popup/item_1/id = 1
+popup/item_2/text = "Debug"
+popup/item_2/id = 2
+popup/item_3/text = "Information"
+popup/item_3/id = 3
+popup/item_4/text = "Error"
+popup/item_4/id = 4
+
+[node name="LogMessage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Message"
+
+[node name="CaptureLogButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+text = "Log Message"
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="EncourageHwAccel" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+text = "Encourage Hardware Accelaration"
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="ExternalUrlInput" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "https://github.com/kuylar/discord-embedded-godot"
+placeholder_text = "https://"
+
+[node name="ExternalUrlButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2"]
+layout_mode = 2
+text = "Open External URL"
+
+[node name="HSeparator4" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+text = "Orientation Lock State (Mobile Only)
+(Fullscreen - PiP - Grid)
+"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+layout_mode = 2
+
+[node name="LockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+fit_to_longest_item = false
+item_count = 4
+popup/item_0/text = "Unhandled"
+popup/item_1/text = "Unlocked"
+popup/item_1/id = 1
+popup/item_2/text = "Portrait"
+popup/item_2/id = 2
+popup/item_3/text = "Landscape"
+popup/item_3/id = 3
+
+[node name="PipLockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+fit_to_longest_item = false
+item_count = 4
+popup/item_0/text = "Unhandled"
+popup/item_1/text = "Unlocked"
+popup/item_1/id = 1
+popup/item_2/text = "Portrait"
+popup/item_2/id = 2
+popup/item_3/text = "Landscape"
+popup/item_3/id = 3
+
+[node name="GridLockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+fit_to_longest_item = false
+item_count = 4
+popup/item_0/text = "Unhandled"
+popup/item_1/text = "Unlocked"
+popup/item_1/id = 1
+popup/item_2/text = "Portrait"
+popup/item_2/id = 2
+popup/item_3/text = "Landscape"
+popup/item_3/id = 3
+
+[node name="SetOrientationLockButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+layout_mode = 2
+text = "Set Orientation Lock State"
+
+[node name="Info" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="LogChannelInfoButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+layout_mode = 2
+text = "Log Channel Info"
+
+[node name="LogChannelPermissionsButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+layout_mode = 2
+text = "Log Channel Permissions"
+
+[node name="LogPlatformBehaviorsButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+layout_mode = 2
+text = "Log Platform Behaviors"
+
+[node name="LogUserLocaleButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+layout_mode = 2
+text = "Log User Locale"
+
+[node name="Uploading - Sharing" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+layout_mode = 2
+text = "Uploaded image URL"
+
+[node name="ShareMomentUrl" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "https://cdn.discordapp.com/"
+
+[node name="Label2" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "openShareMomentDialog() requires a Discord CDN URL. You can either use the \"Upload Image\" button or paste a URL yourself to the box above"
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+layout_mode = 2
+
+[node name="InitiateImageUploadButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Upload Image"
+
+[node name="ShareMomentButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Share Moment"
+
+[node name="Activity" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="ActivityState" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "State"
+
+[node name="ActivityDetails" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Details"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+layout_mode = 2
+
+[node name="ActivityStartTimestamp" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Start Timestamp (Unix Timestamp)"
+
+[node name="ActivityEndTimestamp" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "End Timestamp (Unix Timestamp)"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+layout_mode = 2
+
+[node name="ActivityLargeImage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Large Image"
+
+[node name="ActivityLargeImageText" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Large Image Hover Text"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+layout_mode = 2
+
+[node name="ActivitySmallImage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Small Image"
+
+[node name="ActivitySmallImageText" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Small Image Hover Text"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+layout_mode = 2
+
+[node name="ActivityPartyId" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Party ID"
+
+[node name="ActivityPartyMemberCount" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Party Member Count"
+
+[node name="ActivityMaxMemberCount" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Party Max Member Count"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+layout_mode = 2
+
+[node name="ActivityMatchSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Match Secret"
+
+[node name="ActivityJoinSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Join Secret"
+
+[node name="ActivitySpectateSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Spectate Secret"
+
+[node name="ActivityInstance" type="CheckBox" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Instanced"
+
+[node name="SetActivityButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+layout_mode = 2
+text = "Set Activity"
+
+[node name="Monetization" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Monetization"]
+layout_mode = 2
+text = "As monetization is not enabled during the public preview, this tab isn't available."
+
+[node name="Raw Dispatch" type="RichTextLabel" parent="HBoxContainer/VSplitContainer/TabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+scroll_following = true
+metadata/_tab_index = 5
+
+[node name="Log" type="RichTextLabel" parent="HBoxContainer/VSplitContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+bbcode_enabled = true
+text = "Log Output"
+
+[node name="Panel2" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Dispatch" type="RichTextLabel" parent="HBoxContainer/Panel2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Dispatch Output"
+scroll_following = true
+autowrap_mode = 1
+
+[node name="PipOverlay" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PipOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="PipOverlay/VBoxContainer"]
+layout_mode = 2
+text = "I'm tiny!
+ "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PipInteractivityTestButton" type="Button" parent="PipOverlay/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "I was pressed 0 times"
+
+[node name="OauthWindowBg" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OauthWindow" type="Window" parent="OauthWindowBg"]
+unique_name_in_owner = true
+title = "Authentication"
+initial_position = 1
+size = Vector2i(300, 265)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OauthWindowBg/OauthWindow"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+layout_mode = 2
+text = "Select Scopes"
+
+[node name="OauthScopeIdentify" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "identify"
+
+[node name="OauthScopeGuilds" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "guilds"
+
+[node name="OauthScopeActivitiesWrite" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "rpc.activities.write"
+
+[node name="OauthScopeVoiceRead" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "rpc.voice.read"
+
+[node name="OauthScopeMembersRead" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "guilds.members.read"
+
+[node name="OauthAuthorizeButton" type="Button" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+text = "Authenticate"
+
+[node name="OauthProgressBar" type="ProgressBar" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+max_value = 3.0
+step = 1.0
+
+[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/InviteButton" to="." method="_on_invite_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4/SetConfigButton" to="." method="_on_set_config_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/General/CaptureLogButton" to="." method="_on_capture_log_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/General/EncourageHwAccel" to="." method="_on_encourage_hw_accel_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2/ExternalUrlButton" to="." method="_on_external_url_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3/SetOrientationLockButton" to="." method="_on_set_orientation_lock_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Info/LogChannelInfoButton" to="." method="_on_log_channel_info_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Info/LogChannelPermissionsButton" to="." method="_on_log_channel_permissions_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Info/LogPlatformBehaviorsButton" to="." method="_on_log_platform_behaviors_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Info/LogUserLocaleButton" to="." method="_on_log_user_locale_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer/InitiateImageUploadButton" to="." method="_on_initiate_image_upload_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer/ShareMomentButton" to="." method="_on_share_moment_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Activity/SetActivityButton" to="." method="_on_set_activity_button_pressed"]
+[connection signal="pressed" from="PipOverlay/VBoxContainer/PipInteractivityTestButton" to="." method="_on_pip_interactivity_test_button_pressed"]
+[connection signal="pressed" from="OauthWindowBg/OauthWindow/VBoxContainer/OauthAuthorizeButton" to="." method="_on_oauth_authorize_button_pressed"]
