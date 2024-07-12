@@ -363,10 +363,10 @@ func command_set_activity(state: String, details: String, timestamps: Dictionary
 	return packet
 
 
-func command_set_config(user_interactive_pip: bool):
+func command_set_config(use_interactive_pip: bool):
 	var nonce = _gen_nonce()
 	sendCommand("SET_CONFIG", {
-		"user_interactive_pip": user_interactive_pip
+		"use_interactive_pip": use_interactive_pip
 	}, nonce)
 	
 	var packet = yield(_wait_for_nonce(nonce), "completed")
