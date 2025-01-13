@@ -26,6 +26,8 @@ var channel_id : String
 var client_id : String
 var guild_id : String
 var user_id : String
+var custom_id : String
+var referrer_id : String
 
 var source : JavaScriptObject
 var source_origin : String
@@ -117,9 +119,16 @@ func init(client_id_: String):
 	instance_id = query_map["instance_id"]
 	platform = query_map["platform"]
 	channel_id = query_map["channel_id"]
-	guild_id = query_map["guild_id"]
+	if (query_map.has("guild_id")):
+		guild_id = query_map["guild_id"]
+	else:
+		guild_id = ""
+		print("Not in a guild")
+	if (query_map.has("custom_id")):
+		custom_id = query_map["custom_id"]
+	if (query_map.has("referrer_id")):
+		referrer_id = query_map["referrer_id"]
 	client_id = client_id_
-	
 	source = JavaScriptBridge.get_interface("window").parent.opener
 	if (source == null):
 		source = JavaScriptBridge.get_interface("window").parent
@@ -406,6 +415,18 @@ func command_start_purchase(sku_id: String, pid: int):
 func command_user_settings_get_locale():
 	var nonce = _gen_nonce()
 	sendCommand("USER_SETTINGS_GET_LOCALE", {}, nonce)
+	
+	var packet = await _wait_for_nonce(nonce)
+	return packet
+
+
+func command_share_link(message: String, referrer_id: String, custom_id: String):
+	var nonce = _gen_nonce()
+	sendCommand("SHARE_LINK", {
+		"referrer_id": referrer_id,
+		"custom_id": custom_id,
+		"message": message
+	}, nonce)
 	
 	var packet = await _wait_for_nonce(nonce)
 	return packet

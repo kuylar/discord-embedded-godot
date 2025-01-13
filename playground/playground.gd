@@ -108,8 +108,11 @@ func _on_encourage_hw_accel_pressed() -> void:
 func _on_external_url_button_pressed() -> void:
 	var url = $"%ExternalUrlInput".text
 	msg("[i]discord.command_open_external_link(" + str(url) + ")[/i]")
-	var _result = await discord.command_open_external_link(url)
-	msg("[i][b]no output[/b][/i]")
+	var result = await discord.command_open_external_link(url)
+	if (result["opened"]):
+		msg("URL opened")
+	else:
+		msg("URL did not open")
 
 
 func _on_set_orientation_lock_button_pressed() -> void:
@@ -238,6 +241,15 @@ func _on_set_activity_button_pressed() -> void:
 	if (len(secret_spectate) > 0):
 		secrets["spectate"] = secret_spectate
 	discord.command_set_activity(state, details, timestamps, assets, party, secrets, instance)
+
+
+func _on_share_link_button_pressed() -> void:
+	msg("[i]discord.command_share_link()[/i]")
+	var result = await discord.command_share_link("Try out this sick activiy!", discord.user_id, "this is a cool custom id :)")
+	if (result["success"]):
+		msg("Message sent successfully!")
+	else:
+		msg("User cancelled the prompt :( this is a sad day")
 
 
 func _on_oauth_authorize_button_pressed() -> void:

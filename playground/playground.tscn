@@ -92,7 +92,7 @@ size_flags_horizontal = 3
 [node name="TabContainer" type="TabContainer" parent="HBoxContainer/VSplitContainer"]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
-current_tab = 1
+current_tab = 2
 
 [node name="General" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
 visible = false
@@ -237,6 +237,7 @@ layout_mode = 2
 text = "Set Orientation Lock State"
 
 [node name="Info" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -257,7 +258,6 @@ layout_mode = 2
 text = "Log User Locale"
 
 [node name="Uploading - Sharing" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -288,6 +288,11 @@ text = "Upload Image"
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Share Moment"
+
+[node name="ShareActivityLink" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Share Activity Link"
 
 [node name="Activity" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
 visible = false
@@ -543,6 +548,7 @@ step = 1.0
 [connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Info/LogUserLocaleButton" to="." method="_on_log_user_locale_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer/InitiateImageUploadButton" to="." method="_on_initiate_image_upload_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer/ShareMomentButton" to="." method="_on_share_moment_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer/ShareActivityLink" to="." method="_on_share_link_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VSplitContainer/TabContainer/Activity/SetActivityButton" to="." method="_on_set_activity_button_pressed"]
 [connection signal="pressed" from="PipOverlay/VBoxContainer/PipInteractivityTestButton" to="." method="_on_pip_interactivity_test_button_pressed"]
 [connection signal="pressed" from="OauthWindowBg/OauthWindow/VBoxContainer/OauthAuthorizeButton" to="." method="_on_oauth_authorize_button_pressed"]
