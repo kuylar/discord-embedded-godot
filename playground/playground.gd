@@ -100,7 +100,7 @@ func _on_capture_log_button_pressed() -> void:
 			level = "error"
 	var message: String = $"%LogMessage".text
 	msg("[i]discord.command_capture_log(%s, %s)[/i]" % [level, message])
-	var _result := await discord.command_capture_log(level, message)
+	await discord.command_capture_log(level, message)
 	msg("[i][b]no output[/b][/i]")
 
 
@@ -126,7 +126,7 @@ func _on_set_orientation_lock_button_pressed() -> void:
 	var grid_lock_state: int = -1 if $"%GridLockState".get_selected_id() == 0 else $"%GridLockState".get_selected_id()
 
 	msg("[i]discord.command_set_orientation_lock_state(%s, %s, %s)[/i]" % [lock_state, pip_lock_state, grid_lock_state])
-	var _result := await discord.command_set_orientation_lock_state(lock_state, pip_lock_state, grid_lock_state)
+	await discord.command_set_orientation_lock_state(lock_state, pip_lock_state, grid_lock_state)
 	msg("[i][b]no output[/b][/i]")
 
 
@@ -166,8 +166,8 @@ func _on_log_platform_behaviors_button_pressed() -> void:
 	msg("[i]discord.command_get_platform_behaviors()[/i]")
 	var result := await discord.command_get_platform_behaviors()
 	msg("[Platform Behaviors] ===============================================")
-	for key in result:
-		msg(str(key) + ": " + str(result[key]))
+	if result.ios_keyboard_resizes_view != null:
+		msg("ios_keyboard_resizes_view: " + str(result.ios_keyboard_resizes_view))
 	msg("[/Platform Behaviors] ==============================================")
 
 
@@ -188,13 +188,13 @@ func _on_initiate_image_upload_button_pressed() -> void:
 func _on_share_moment_button_pressed() -> void:
 	var line_edit: LineEdit = $"%ShareMomentUrl"
 	msg("[i]discord.command_open_share_moment_dialog()[/i]")
-	var _result := await discord.command_open_share_moment_dialog(line_edit.text)
+	await discord.command_open_share_moment_dialog(line_edit.text)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_invite_button_pressed() -> void:
 	msg("[i]discord.command_open_invite_dialog()[/i]")
-	var _result := await discord.command_open_invite_dialog()
+	await discord.command_open_invite_dialog()
 	msg("[i][b]no output[/b][/i]")
 
 

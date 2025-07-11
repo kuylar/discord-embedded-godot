@@ -158,6 +158,26 @@ class ParticipantsUpdateData:
 
 
 #region Custom SDK types, only used for this SDK
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#uservoicestate
+class DiscordUserVoiceState:
+	var mute: bool
+	var nick: String
+	var user: DiscordUser
+	var voice_state: DiscordVoiceState
+	var volume: int
+	var pan: DiscordAudioPan
+	static func decode(dict: Dictionary) -> DiscordUserVoiceState:
+		var data := DiscordUserVoiceState.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("user") != null:
+			data.user = DiscordUser.decode(dict["user"])
+		if dict.get("voice_state") != null:
+			data.voice_state = DiscordVoiceState.decode(dict["voice_state"])
+		if dict.get("pan") != null:
+			data.pan = DiscordAudioPan.decode(dict["pan"])
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#voicestate
 class DiscordVoiceState:
 	var mute: bool
 	var deaf: bool
@@ -168,6 +188,7 @@ class DiscordVoiceState:
 		var data := DiscordVoiceState.new()
 		DiscordSDK._decode_simple(dict, data)
 		return data
+
 class DiscordAudioPan:
 	var left: float
 	var right: float
@@ -180,6 +201,44 @@ class DiscordAudioPan:
 
 #region SDK interface types (https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sdk-interfaces)
 #       Prefix them with "Discord" in order to not clash with outside types.
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#channeltypesobject
+enum DiscordChannelTypes {
+	UNHANDLED = -1,
+	DM = 1,
+	GROUP_DM = 3,
+	GUILD_TEXT = 0,
+	GUILD_VOICE = 2,
+	GUILD_CATEGORY = 4,
+	GUILD_ANNOUNCEMENT = 5,
+	GUILD_STORE = 6,
+	ANNOUNCEMENT_THREAD = 10,
+	PUBLIC_THREAD = 11,
+	PRIVATE_THREAD = 12,
+	GUILD_STAGE_VOICE = 13,
+	GUILD_DIRECTORY = 14,
+	GUILD_FORUM = 15,
+}
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#orientationlockstatetypeobject
+enum DiscordOrientationLockStateType {
+	UNHANDLED = -1,
+	UNLOCKED = 1,
+	PORTRAIT = 2,
+	LANDSCAPE = 3
+}
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#skutypeobject
+enum DiscordSkuType {
+	UNHANDLED = -1,
+	APPLICATION = 1,
+	DLC = 2,
+	CONSUMABLE = 3,
+	BUNDLE = 4,
+	SUBSCRIPTION = 5
+}
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#activity
 class DiscordActivity:
 	## The name of the activity
 	var name: String
@@ -199,16 +258,32 @@ class DiscordActivity:
 	var state: String
 	## Emoji (Nullable)
 	var emoji: DiscordEmoji
-	
-	static func decode(dict: Dictionary) -> DiscordAudioPan:
-		var data := DiscordAudioPan.new()
+	## Party (Nullable)
+	var party: DiscordParty
+	## Assets (Nullable)
+	var assets: DiscordAssets
+	## Secrets (Nullable)
+	var secrets: DiscordSecrets
+	## Instance (Nullable)
+	var instance: bool
+	## Flags (Nullable)
+	var flags: int
+	static func decode(dict: Dictionary) -> DiscordActivity:
+		var data := DiscordActivity.new()
 		DiscordSDK._decode_simple(dict, data)
 		if dict.get("timestamps") != null:
 			data.timestamps = DiscordTimestamp.decode(dict["timestamps"])
 		if dict.get("emoji") != null:
 			data.emoji = DiscordEmoji.decode(dict["emoji"])
+		if dict.get("party") != null:
+			data.party = DiscordParty.decode(dict["party"])
+		if dict.get("assets") != null:
+			data.assets = DiscordAssets.decode(dict["assets"])
+		if dict.get("secrets") != null:
+			data.secrets = DiscordSecrets.decode(dict["secrets"])
 		return data
 
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#emoji
 class DiscordEmoji:
 	## Emoji ID
 	var id: String
@@ -233,6 +308,7 @@ class DiscordEmoji:
 			data.user = DiscordUser.decode(dict["user"])
 		return data
 
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#timestamp
 class DiscordTimestamp:
 	## Start time (Nullable)
 	var start: int
@@ -243,6 +319,40 @@ class DiscordTimestamp:
 		DiscordSDK._decode_simple(dict, data)
 		return data
 
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#attachment
+class DiscordAttachment:
+	## ID
+	var id: String
+	## Filename
+	var filename: String
+	## Size
+	var size: int
+	## URL
+	var url: String
+	## Proxy URL
+	var proxy_url: String
+	## Height (Nullable)
+	var height:	int
+	## Width (Nullable)
+	var width:	int
+	static func decode(dict: Dictionary) -> DiscordAttachment:
+		var data := DiscordAttachment.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#reaction
+class DiscordReaction:
+	var count: int
+	var me: bool
+	var emoji: DiscordEmoji
+	static func decode(dict: Dictionary) -> DiscordReaction:
+		var data := DiscordReaction.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("emoji") != null:
+			data.emoji = DiscordEmoji.decode(dict["emoji"])
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#user
 class DiscordUser extends DiscordSimpleUser:
 	## Global name (Nullable)
 	var global_name: String
@@ -276,11 +386,465 @@ class DiscordSimpleUser:
 class DiscordAvatarDecorationData:
 	## Asset
 	var asset: String
-	## (Nullable)
+	## SKU ID (Nullable)
 	var sku_id: String
 	static func decode(dict: Dictionary) -> DiscordAvatarDecorationData:
 		var data := DiscordAvatarDecorationData.new()
 		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#guildmember
+class DiscordGuildMember:
+	## User
+	var user: DiscordUser
+	## Nick (Nullable)
+	var nick: String
+	## Roles
+	var roles: Array[String] = []
+	## Joined at
+	var joined_at: String
+	## Deaf
+	var deaf: bool
+	## Mute
+	var mute: bool
+	static func decode(dict: Dictionary) -> DiscordGuildMember:
+		var data := DiscordGuildMember.new()
+		DiscordSDK._decode_simple(dict, data)
+		data.user = DiscordUser.decode(dict["user"])
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#assets
+class DiscordAssets:
+	## Large image (Nullable)
+	var large_image: String
+	## Large text (Nullable)
+	var large_text: String
+	## Small image (Nullable)
+	var small_image: String
+	## Small text (Nullable)
+	var small_text: String
+	static func decode(dict: Dictionary) -> DiscordAssets:
+		var data := DiscordAssets.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#application
+class DiscordApplication:
+	## Description
+	var description: String
+	## Icon (Nullable)
+	var icon: String
+	## Id
+	var id: String
+	## RPC origins
+	var rpc_origins: Array[String] = []
+	## Name
+	var name: String
+	static func decode(dict: Dictionary) -> DiscordApplication:
+		var data := DiscordApplication.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#party
+class DiscordParty:
+	## Party ID (Nullable)
+	var id: String
+	## Party size (Nullable)
+	var size: Array[String]
+	static func decode(dict: Dictionary) -> DiscordParty:
+		var data := DiscordParty.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#relationship
+class DiscordRelationship:
+	## Relationship type
+	var type: int
+	## Relationship user
+	var user: DiscordUser
+	static func decode(dict: Dictionary) -> DiscordApplication:
+		var data := DiscordApplication.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("user") != null:
+			data.user = DiscordUser.decode(data["user"])
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#secrets
+class DiscordSecrets:
+	## Join secret (Nullable)
+	var id_secret: String
+	## Match secret (Nullable)
+	var match_secret: String
+	static func decode(dict: Dictionary) -> DiscordSecrets:
+		var data := DiscordSecrets.new()
+		data.id_secret = dict["secret"]
+		data.match_secret = dict["match"]
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#message
+class DiscordMessage:
+	## ID
+	var id: String
+	## Channel ID
+	var channel_id: String
+	## Guild ID (Nullable)
+	var guild_id
+	## Author (Nullable)
+	var author: DiscordUser
+	## Member (Nullable)
+	var member: DiscordGuildMember
+	## Content
+	var content: String
+	## Timestamp
+	var timestamp: String
+	## Edited timestamp (Nullable)
+	var edited_timestamp: String
+	## Text-to-speech
+	var tts: bool
+	## Mention everyone
+	var mention_everyone: bool
+	## Mentions
+	var mentions: Array[DiscordUser]
+	## Mention roles
+	var mention_roles: Array[String]
+	## Mentioned channels
+	var mention_channels: Array[Dictionary]
+	## Attachments
+	var attachments: Array[DiscordAttachment]
+	## Embeds
+	var embeds: Array[Dictionary]  # TODO: Make a data type for embeds
+	## Reactions (Nullable)
+	var reactions: Array[DiscordReaction]
+	## Nonce
+	var nonce: String
+	## Pinned
+	var pinned: bool
+	## Webhook ID (Nullable)
+	var webhook_id: String
+	## Type
+	var type: int
+	## Message activity (Nullable)
+	var activity: DiscordMessageActivity
+	## Message application (Nullable)
+	var application: DiscordMessageApplication
+	## Message reference (Nullable)
+	var message_reference: DiscordMessageReference
+	## Flags
+	var flags: int
+	## Stickers (Nullable)
+	var stickers: Array[Dictionary]  # Stickers don't seem to have a type in the docs?
+	## Referenced message (Nullable)
+	var referenced_message: DiscordMessage
+	static func decode(dict: Dictionary) -> DiscordMessage:
+		var data := DiscordMessage.new()
+		DiscordSDK._decode_simple(dict, data)
+		data.author = DiscordUser.decode(dict["author"])
+		data.member = DiscordGuildMember.decode(dict["member"])
+		if dict.get("mentions") != null:
+			data.mentions = []
+			for mention in dict["mentions"]:
+				data.mentions.push_back(DiscordUser.decode(mention))
+		if dict.get("attachments") != null:
+			data.attachments = []
+			for attachment in dict["attachments"]:
+				data.attachments.push_back(DiscordAttachment.decode(attachment))
+		if dict.get("reactions") != null:
+			data.reactions = []
+			for reaction in dict["reactions"]:
+				data.reactions.push_back(DiscordReaction.decode(reaction))
+		if dict.get("activity") != null:
+			data.activity = DiscordMessageActivity.decode(dict["activity"])
+		if dict.get("application") != null:
+			data.application = DiscordMessageApplication.decode(dict["application"])
+		if dict.get("message_reference") != null:
+			data.message_reference = DiscordMessageReference.decode(dict["message_reference"])
+		if dict.get("referenced_message") != null:
+			data.referenced_message = DiscordMessage.decode(dict["referenced_message"])
+		return data
+class DiscordMessageActivity:
+	## Type
+	var type: int
+	## Party ID (Nullable)
+	var party_id: String
+	static func decode(dict: Dictionary) -> DiscordMessageActivity:
+		var data := DiscordMessageActivity.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+class DiscordMessageApplication:
+	## ID
+	var id: String
+	## Cover image (Nullable)
+	var cover_image: String
+	## Description
+	var description: String
+	## Icon (Nullable)
+	var icon: String
+	## Name
+	var name: String
+	static func decode(dict: Dictionary) -> DiscordMessageApplication:
+		var data := DiscordMessageApplication.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+class DiscordMessageReference:
+	## Message ID (Nullable)
+	var message_id: String
+	## Channel ID (Nullable)
+	var channel_id: String
+	## Guild ID (Nullable)
+	var guild_id: String
+	static func decode(dict: Dictionary) -> DiscordMessageReference:
+		var data := DiscordMessageReference.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sku
+class DiscordSku:
+	## ID
+	var id: String
+	## Name
+	var name: String
+	## Type
+	var type: DiscordSkuType
+	## Price
+	var price: DiscordSkuPrice
+	## Application ID
+	var application_id: String
+	## Flags
+	var flags: int
+	## Release date (Nullable)
+	var release_date: String
+	static func decode(dict: Dictionary) -> DiscordSku:
+		var data := DiscordSku.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("type") != null:
+			data.type = int(dict["type"]) as DiscordSkuType
+		if dict.get("price") != null:
+			data.price = DiscordSkuPrice.decode(dict["price"])
+		return data
+class DiscordSkuPrice:
+	var amount: float
+	var currency: String
+	static func decode(dict: Dictionary) -> DiscordSkuPrice:
+		var data := DiscordSkuPrice.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#entitlement
+class DiscordEntitlement:
+	## ID
+	var id: String
+	## SKU ID
+	var sku_id: String
+	## Application ID
+	var application_id: String
+	## User ID
+	var user_id: String
+	## Gift code flags
+	var gift_code_flags: int
+	## Type (String or int)
+	var type: Variant
+	## Gifter user ID (Nullable)
+	var gifter_user_id: String
+	## Branches (Nullable)
+	var branches: Array[String]
+	## Starts at (Nullable)
+	var starts_at: String
+	## Ends at (Nullable)
+	var ends_at: String	
+	## Parent ID (Nullable)
+	var parent_id: String
+	## Consumed (Nullable)
+	var consumed: bool
+	## Deleted (Nullable)
+	var deleted: bool
+	## Gift code batch ID (Nullable)
+	var gift_code_batch_id: String
+	static func decode(dict: Dictionary) -> DiscordEntitlement:
+		var data := DiscordEntitlement.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+#endregion
+
+
+#region Command response types (https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sdk-commands)
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#authenticateresponse
+class CommandAuthenticateResponse:
+	## Access token
+	var access_token: String
+	## User
+	var user: DiscordUser
+	## Scopes
+	var scopes: Array[String] = []
+	## Expires
+	var expires: String
+	## Application
+	var application: DiscordApplication
+	static func decode(dict: Dictionary) -> CommandAuthenticateResponse:
+		var data := CommandAuthenticateResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("user") != null:
+			data.user = DiscordUser.decode(data["user"])
+		if dict.get("application") != null:
+			data.application = DiscordApplication.decode(data["application"])
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#authorizeresponse
+class CommandAuthorizeResponse:
+	## Authorization code
+	var code: String
+	static func decode(dict: Dictionary) -> CommandAuthorizeResponse:
+		var data := CommandAuthorizeResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#encouragehardwareaccelerationresponse
+class CommandEncourageHardwareAccelerationResponse:
+	var enabled: bool
+	static func decode(dict: Dictionary) -> CommandEncourageHardwareAccelerationResponse:
+		var data := CommandEncourageHardwareAccelerationResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getchannelpermissionsresponse
+class CommandGetChannelPermissionsResponse:
+	## Permissions (BigInt string)
+	var permissions: String
+	static func decode(dict: Dictionary) -> CommandGetChannelPermissionsResponse:
+		var data := CommandGetChannelPermissionsResponse.new()
+		data.permissions = str(dict["permissions"])
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getinstanceconnectedparticipantsresponse
+class CommandGetInstanceConnectedParticipantsResponse:
+	var participants: Array[DiscordUser]
+	static func decode(dict: Dictionary) -> CommandGetInstanceConnectedParticipantsResponse:
+		var data := CommandGetInstanceConnectedParticipantsResponse.new()
+		if dict.get("participants") != null:
+			data.participants = []
+			for participant in dict["participants"]:
+				data.participants.push_back(DiscordUser.decode(participant))
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getplatformbehaviorsresponse
+class CommandGetPlatformBehaviorsResponse:
+	## IOS keyboard resizes view 
+	var ios_keyboard_resizes_view: bool
+	static func decode(dict: Dictionary) -> CommandGetPlatformBehaviorsResponse:
+		var data := CommandGetPlatformBehaviorsResponse.new()
+		data.ios_keyboard_resizes_view = dict["iosKeyboardResizesView"]
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getrelationshipsresponse
+class CommandGetRelationshipsResponse:
+	var relationships: Array[DiscordRelationship]
+	static func decode(dict: Dictionary) -> CommandGetRelationshipsResponse:
+		var data := CommandGetRelationshipsResponse.new()
+		if dict.get("relationships") != null:
+			data.relationships = []
+			for relationship in dict["relationships"]:
+				data.relationships.push_back(DiscordRelationship.decode(relationship))
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getskusresponse
+class CommandGetSkusResponse:
+	var skus: Array[DiscordSku]
+	static func decode(dict: Dictionary) -> CommandGetSkusResponse:
+		var data := CommandGetSkusResponse.new()
+		if dict.get("skus") != null:
+			data.skus = []
+			for sku in dict["skus"]:
+				data.skus.push_back(DiscordSku.decode(sku))
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#initiateimageuploadresponse
+class CommandInitiateImageUploadResponse:
+	## Image URL
+	var image_url: String
+	static func decode(dict: Dictionary) -> CommandInitiateImageUploadResponse:
+		var data := CommandInitiateImageUploadResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#openexternallinkresponse
+class CommandOpenExternalLinkResponse:
+	## Opened (Nullable)
+	var opened: bool
+	static func decode(dict: Dictionary) -> CommandOpenExternalLinkResponse:
+		var data := CommandOpenExternalLinkResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sharelinkresponse
+class CommandShareLinkResponse:
+	## Success
+	var success: bool
+	static func decode(dict: Dictionary) -> CommandShareLinkResponse:
+		var data := CommandShareLinkResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#usersettingsgetlocaleresponse
+class CommandUserSettingsGetLocaleResponse:
+	## Locale
+	var locale: String
+	static func decode(dict: Dictionary) -> CommandUserSettingsGetLocaleResponse:
+		var data := CommandUserSettingsGetLocaleResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#setconfigresponse
+class CommandSetConfigResponse:
+	## Use interactive PIP
+	var use_interactive_pip: bool
+	static func decode(dict: Dictionary) -> CommandSetConfigResponse:
+		var data := CommandSetConfigResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getchannelresponse
+class CommandGetChannelResponse:
+	## ID
+	var id: String
+	## Channel type
+	var type: DiscordChannelTypes
+	## Guild ID (Nullable)
+	var guild_id: String
+	## Name (Nullable)
+	var name: String
+	## Topic (Nullable)
+	var topic: String
+	## Bitrate (Nullable)
+	var bitrate: int
+	## User limit (Nullable)
+	var user_limit: int
+	## Position (Nullable)
+	var position: int
+	## Voice states
+	var voice_states: Array[DiscordUserVoiceState]
+	## Messages
+	var messages: Array[DiscordMessage]
+	static func decode(dict: Dictionary) -> CommandGetChannelResponse:
+		var data := CommandGetChannelResponse.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("voice_states") != null:
+			data.voice_states = []
+			for state in dict["voice_states"]:
+				data.voice_states.push_back(DiscordUserVoiceState.decode(state))
+		if dict.get("messages") != null:
+			data.messages = []
+			for message in dict["messages"]:
+				data.messages.push_back(DiscordMessage.decode(message))
+		return data
+
+## https://discord.com/developers/docs/developer-tools/embedded-app-sdk#getentitlementsresponse
+class CommandGetEntitlements:
+	var entitlements: Array[DiscordEntitlement]
+	static func decode(dict: Dictionary) -> CommandGetEntitlements:
+		var data := CommandGetEntitlements.new()
+		if dict.get("entitlements") != null:
+			data.entitlements = []
+			for entitlement in dict["entitlements"]:
+				data.entitlements.push_back(DiscordEntitlement.decode(entitlement))
 		return data
 #endregion
 
@@ -291,7 +855,6 @@ static func _decode_simple(dict: Dictionary, target: Object) -> void:
 		return
 	for key in dict.keys():
 		var value = dict[key]
-		var gotten = target.get(key)
 		target.set(key, value)
 
 
@@ -531,8 +1094,8 @@ func _wait_for_nonce(nonce: String):
 			break
 	return packet["data"]
 
-func command_authorize(response_type: String, scopes: Array, state: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_authorize(response_type: String, scopes: Array, state: String) -> CommandAuthorizeResponse:
+	var nonce := _gen_nonce()
 	sendCommand("AUTHORIZE", {
 		"client_id": client_id,
 		"prompt": "none",
@@ -542,122 +1105,115 @@ func command_authorize(response_type: String, scopes: Array, state: String) -> D
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandAuthorizeResponse.decode(packet)
 
-func command_authenticate(access_token: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_authenticate(access_token: String) -> CommandAuthenticateResponse:
+	var nonce := _gen_nonce()
 	sendCommand("AUTHENTICATE", {
 		"access_token": access_token
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandAuthenticateResponse.decode(packet)
 
-func command_capture_log(level: String, message: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_capture_log(level: String, message: String) -> void:
+	var nonce := _gen_nonce()
 	sendCommand("CAPTURE_LOG", {
 		"level": level,
 		"message": message
 	}, nonce)
+	await _wait_for_nonce(nonce)
 
-	var packet = await _wait_for_nonce(nonce)
-	return packet
-
-func command_encourage_hardware_acceleration() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_encourage_hardware_acceleration() -> CommandEncourageHardwareAccelerationResponse:
+	var nonce := _gen_nonce()
 	sendCommand("ENCOURAGE_HW_ACCELERATION", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandEncourageHardwareAccelerationResponse.decode(packet)
 
-func command_get_channel(id: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_get_channel(id: String) -> CommandGetChannelResponse:
+	var nonce := _gen_nonce()
 	sendCommand("GET_CHANNEL", {
 		"channel_id": id
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandGetChannelResponse.decode(packet)
 
 
-func command_get_channel_permissions() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_get_channel_permissions() -> CommandGetChannelPermissionsResponse:
+	var nonce := _gen_nonce()
 	sendCommand("GET_CHANNEL_PERMISSIONS", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandGetChannelPermissionsResponse.decode(packet)
 
 
-func command_get_entitlements_embedded() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_get_entitlements_embedded() -> CommandGetEntitlements:
+	var nonce := _gen_nonce()
 	sendCommand("GET_ENTITLEMENTS_EMBEDDED", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandGetEntitlements.decode(packet)
 
 
-func command_get_instance_connected_participants() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_get_instance_connected_participants() -> CommandGetInstanceConnectedParticipantsResponse:
+	var nonce := _gen_nonce()
 	sendCommand("GET_ACTIVITY_INSTANCE_CONNECTED_PARTICIPANTS", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandGetInstanceConnectedParticipantsResponse.decode(packet)
 
 
-func command_get_platform_behaviors() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_get_platform_behaviors() -> CommandGetPlatformBehaviorsResponse:
+	var nonce := _gen_nonce()
 	sendCommand("GET_PLATFORM_BEHAVIORS", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandGetPlatformBehaviorsResponse.decode(packet)
 
 
-func command_get_skus() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_get_skus() -> CommandGetSkusResponse:
+	var nonce := _gen_nonce()
 	sendCommand("GET_SKUS_EMBEDDED", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandGetSkusResponse.decode(packet)
 
 
-func command_initiate_image_upload() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_initiate_image_upload() -> CommandInitiateImageUploadResponse:
+	var nonce := _gen_nonce()
 	sendCommand("INITIATE_IMAGE_UPLOAD", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandInitiateImageUploadResponse.decode(packet)
 
 
-func command_open_external_link(url: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_open_external_link(url: String) -> CommandOpenExternalLinkResponse:
+	var nonce := _gen_nonce()
 	sendCommand("OPEN_EXTERNAL_LINK", {
 		"url": url
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandOpenExternalLinkResponse.decode(packet)
 
 
-func command_open_invite_dialog() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_open_invite_dialog() -> void:
+	var nonce := _gen_nonce()
 	sendCommand("OPEN_INVITE_DIALOG", {}, nonce)
-
-	var packet = await _wait_for_nonce(nonce)
-	return packet
+	await _wait_for_nonce(nonce)
 
 
-func command_open_share_moment_dialog(media_url: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_open_share_moment_dialog(media_url: String) -> void:
+	var nonce := _gen_nonce()
 	sendCommand("OPEN_SHARE_MOMENT_DIALOG", {
 		"mediaUrl": media_url
 	}, nonce)
+	await _wait_for_nonce(nonce)
 
-	var packet = await _wait_for_nonce(nonce)
-	return packet
-
-
-func command_set_activity(state: String, details: String, timestamps: Dictionary = {}, assets: Dictionary = {}, party: Dictionary = {}, secrets: Dictionary = {}, instance: bool = false) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_set_activity(state: String, details: String, timestamps: Dictionary = {}, assets: Dictionary = {}, party: Dictionary = {}, secrets: Dictionary = {}, instance: bool = false) -> DiscordActivity:
+	var nonce := _gen_nonce()
 	sendCommand("SET_ACTIVITY", {
 		"activity": {
 			"state": state,
@@ -671,56 +1227,52 @@ func command_set_activity(state: String, details: String, timestamps: Dictionary
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return DiscordActivity.decode(packet)
 
 
-func command_set_config(use_interactive_pip: bool) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_set_config(use_interactive_pip: bool) -> CommandSetConfigResponse:
+	var nonce := _gen_nonce()
 	sendCommand("SET_CONFIG", {
 		"use_interactive_pip": use_interactive_pip
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandSetConfigResponse.decode(packet)
 
 
-
-# UNHANDLED: -1
-# PORTRAIT: 0
-# LANDSCAPE: 1
-func command_set_orientation_lock_state(lock_state: int, pip_lock_state: int, grid_lock_state: int) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_set_orientation_lock_state(lock_state: DiscordOrientationLockStateType, pip_lock_state: DiscordOrientationLockStateType, grid_lock_state: DiscordOrientationLockStateType) -> void:
+	var nonce := _gen_nonce()
 	sendCommand("SET_ORIENTATION_LOCK_STATE", {
 		"lock_state": lock_state,
 		"pip_lock_state": pip_lock_state,
 		"grid_lock_state": grid_lock_state
 	}, nonce)
+	await _wait_for_nonce(nonce)
 
-	var packet = await _wait_for_nonce(nonce)
-	return packet
-
-
-func command_start_purchase(sku_id: String, pid: int) -> Dictionary:
-	var nonce = _gen_nonce()
+## Returns either null or [DiscordEntitlement]
+func command_start_purchase(sku_id: String, pid: int) -> DiscordEntitlement:
+	var nonce := _gen_nonce()
 	sendCommand("START_PURCHASE", {
 		"sku_id": sku_id,
 		"pid": pid
 	}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	if packet == null:
+		return null
+	return DiscordEntitlement.decode(packet)
 
 
-func command_user_settings_get_locale() -> Dictionary:
-	var nonce = _gen_nonce()
+func command_user_settings_get_locale() -> CommandUserSettingsGetLocaleResponse:
+	var nonce := _gen_nonce()
 	sendCommand("USER_SETTINGS_GET_LOCALE", {}, nonce)
 
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandUserSettingsGetLocaleResponse.decode(packet)
 
 
-func command_share_link(message: String, referrer_id: String, custom_id: String) -> Dictionary:
-	var nonce = _gen_nonce()
+func command_share_link(message: String, referrer_id: String, custom_id: String) -> CommandShareLinkResponse:
+	var nonce := _gen_nonce()
 	sendCommand("SHARE_LINK", {
 		"referrer_id": referrer_id,
 		"custom_id": custom_id,
@@ -728,4 +1280,4 @@ func command_share_link(message: String, referrer_id: String, custom_id: String)
 	}, nonce)
 	
 	var packet = await _wait_for_nonce(nonce)
-	return packet
+	return CommandShareLinkResponse.decode(packet)
