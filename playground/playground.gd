@@ -100,7 +100,7 @@ func _on_capture_log_button_pressed() -> void:
 func _on_encourage_hw_accel_pressed() -> void:
 	msg("[i]discord.command_encourage_hardware_acceleration()[/i]")
 	var result := await discord.command_encourage_hardware_acceleration()
-	msg("Hardware acceleration is: " + ("Enabled" if result["enabled"] else "Disabled"))
+	msg("Hardware acceleration is: " + ("Enabled" if result.enabled else "Disabled"))
 
 
 func _on_external_url_button_pressed() -> void:
