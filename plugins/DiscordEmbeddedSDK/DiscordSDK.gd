@@ -435,7 +435,7 @@ func sendMessage(opcode: int, body: Dictionary):
 	JavaScriptBridge.eval("window.source.postMessage(" + JSON.stringify(data).replace("'", "\\'") + ", '*')", false)
 	#source.postMessage(data, "*")
 
-func sendCommand(cmd: Variant, args: Dictionary, nonce: String):
+func sendCommand(cmd: String, args: Dictionary, nonce: String):
 	if (not in_js):
 		print("Not in a JavaScript environment. Ignoring call to sendCommand()")
 		return
