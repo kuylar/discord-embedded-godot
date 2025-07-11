@@ -421,7 +421,7 @@ func init(client_id_: String):
 	source_origin = JavaScriptBridge.eval("!!document.referrer ? document.referrer : '*'")
 	handshake()
 
-func sendMessage(opcode: Variant, body: Dictionary):
+func sendMessage(opcode: int, body: Dictionary):
 	if (not in_js):
 		print("Not in a JavaScript environment. Ignoring call to sendMessage()")
 		return
