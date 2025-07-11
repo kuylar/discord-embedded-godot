@@ -39,8 +39,11 @@ signal dispatch_activity_instance_participants_update(data: ParticipantsUpdateDa
 ## Receives a [DiscordSDK.CurrentUserUpdateData]
 signal dispatch_current_guild_member_update(data: CurrentUserUpdateData)
 
+## Receives a [Dictionary]. This should be replaced by a proper type when its later added.
 signal dispatch_entitlement_create(data: Dictionary)
-signal dispatch_any(data: Dictionary)
+
+## Receives any event type, or a [Dictionary]
+signal dispatch_any(data: Object)
 #endregion
 
 
@@ -281,6 +284,7 @@ class DiscordAvatarDecorationData:
 		return data
 #endregion
 
+
 ## Automatically decodes anything that isn't a class
 static func _decode_simple(dict: Dictionary, target: Object) -> void:
 	if dict == null:
@@ -331,46 +335,58 @@ func _handle_message(event):
 
 func _handle_dispatch(data):
 	var event = data["evt"]
-	dispatch_any.emit(event, data["data"])
 	match event:
 		"READY":
 			is_ready = true
 			var event_data := ReadyEventData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_ready.emit(event_data)
 		"ERROR":
 			var event_data := ErrorEventData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_error.emit(event_data)
 		"VOICE_STATE_UPDATE":
 			var event_data := VoiceStateUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_voice_state_update.emit(event_data)
 		"SPEAKING_START":
 			var event_data := SpeakingEventData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_speaking_start.emit(event_data)
 		"SPEAKING_STOP":
 			var event_data := SpeakingEventData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_speaking_stop.emit(event_data)
 		"ACTIVITY_LAYOUT_MODE_UPDATE":
 			var event_data := ActivityLayoutModeUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_activity_layout_mode_update.emit(event_data)
 		"ORIENTATION_UPDATE":
 			var event_data := OrientationUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_orientation_update.emit(event_data)
 		"CURRENT_USER_UPDATE":
 			user_id = data["data"]["id"]
 			var event_data := CurrentUserUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_current_user_update.emit(event_data)
 		"THERMAL_STATE_UPDATE":
 			var event_data := ThermalStateUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_thermal_state_update.emit(event_data)
 		"ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE":
 			var event_data := ParticipantsUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_activity_instance_participants_update.emit(event_data)
 		"ENTITLEMENT_CREATE":
+			dispatch_any.emit(event, data["data"] as Dictionary)
 			dispatch_entitlement_create.emit(data["data"] as Dictionary)
 		"CURRENT_GUILD_MEMBER_UPDATE":
 			var event_data := CurrentUserUpdateData.decode(data["data"])
+			dispatch_any.emit(event, event_data)
 			dispatch_current_guild_member_update.emit(event_data)
 		_:
+			dispatch_any.emit(event, data["data"])
 			print("_handle_dispatch: Warning! Unknown event: " + str(event)) # convert to string just to be sure
 
 func _ready():
