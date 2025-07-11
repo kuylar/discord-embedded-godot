@@ -2,21 +2,19 @@ extends Control
 
 const CLIENT_ID = "1219337474266894397"
 
-@onready var discord : DiscordSDK = get_node("/root/Discord")
-@onready var log_node : RichTextLabel = $"HBoxContainer/VSplitContainer/Log"
-@onready var dispatch_log_node : RichTextLabel = $"%Dispatch"
-@onready var raw_dispatch_log_node : RichTextLabel = $"%Raw Dispatch"
+@onready var discord: DiscordSDK = get_node("/root/Discord")
+@onready var log_node: RichTextLabel = $"HBoxContainer/VSplitContainer/Log"
+@onready var dispatch_log_node: RichTextLabel = $"%Dispatch"
+@onready var raw_dispatch_log_node: RichTextLabel = $"%Raw Dispatch"
 
-var pip_interactivity_press_count = 0
+var pip_interactivity_press_count := 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	discord.init(CLIENT_ID)
 	
-	discord.connect("dispatch_any", Callable(self, "_dispatch"))
-	discord.connect("dispatch_current_user_update", Callable(self, "_user_updated"))
-	
-	discord.connect("dispatch_activity_layout_mode_update", Callable(self, "_pip_change"))
+	discord.dispatch_any.connect(_dispatch)
+	discord.dispatch_activity_layout_mode_update.connect(_pip_change)
 	
 	log_node.set_scroll_follow(true)
 
@@ -73,15 +71,15 @@ func _pip_change(data) -> void:
 
 
 func _on_set_config_button_pressed() -> void:
-	var config = $"%PipInteractivityState".get_selected_id() == 1
+	var config: bool = $"%PipInteractivityState".get_selected_id() == 1
 	msg("[i]discord.command_set_config(" + str(config) + ")[/i]")
 	var _result = await discord.command_set_config(config)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_capture_log_button_pressed() -> void:
-	var level_id = $"%LogLevel".get_selected_id()
-	var level = "log"
+	var level_id: int = $"%LogLevel".get_selected_id()
+	var level := "log"
 	match level_id:
 		0:
 			level = "log"
@@ -95,20 +93,20 @@ func _on_capture_log_button_pressed() -> void:
 			level = "error"
 	var message = $"%LogMessage".text
 	msg("[i]discord.command_capture_log(\"" + level + "\", \"" + message + "\")[/i]")
-	var _result = await discord.command_capture_log(level, message)
+	var _result := await discord.command_capture_log(level, message)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_encourage_hw_accel_pressed() -> void:
 	msg("[i]discord.command_encourage_hardware_acceleration()[/i]")
-	var result = await discord.command_encourage_hardware_acceleration()
+	var result := await discord.command_encourage_hardware_acceleration()
 	msg("Hardware acceleration is: " + ("Enabled" if result["enabled"] else "Disabled"))
 
 
 func _on_external_url_button_pressed() -> void:
-	var url = $"%ExternalUrlInput".text
+	var url: String = $"%ExternalUrlInput".text
 	msg("[i]discord.command_open_external_link(" + str(url) + ")[/i]")
-	var result = await discord.command_open_external_link(url)
+	var result := await discord.command_open_external_link(url)
 	if (result["opened"]):
 		msg("URL opened")
 	else:
@@ -116,18 +114,18 @@ func _on_external_url_button_pressed() -> void:
 
 
 func _on_set_orientation_lock_button_pressed() -> void:
-	var lock_state = -1 if $"%LockState".get_selected_id() == 0 else $"%LockState".get_selected_id()
-	var pip_lock_state = -1 if $"%PipLockState".get_selected_id() == 0 else $"%PipLockState".get_selected_id()
-	var grid_lock_state = -1 if $"%GridLockState".get_selected_id() == 0 else $"%GridLockState".get_selected_id()
+	var lock_state: int = -1 if $"%LockState".get_selected_id() == 0 else $"%LockState".get_selected_id()
+	var pip_lock_state: int = -1 if $"%PipLockState".get_selected_id() == 0 else $"%PipLockState".get_selected_id()
+	var grid_lock_state: int = -1 if $"%GridLockState".get_selected_id() == 0 else $"%GridLockState".get_selected_id()
 
 	msg("[i]discord.command_set_orientation_lock_state(" + str(lock_state) + ", " + str(pip_lock_state) + ", " + str(grid_lock_state) + ")[/i]")
-	var _result = await discord.command_set_orientation_lock_state(lock_state, pip_lock_state, grid_lock_state)
+	var _result := await discord.command_set_orientation_lock_state(lock_state, pip_lock_state, grid_lock_state)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_log_channel_info_button_pressed() -> void:
 	msg("[i]discord.command_get_channel(" + str(discord.channel_id) + ")[/i]")
-	var result = await discord.command_get_channel(discord.channel_id)
+	var result := await discord.command_get_channel(discord.channel_id)
 	msg("[Channel Info] =====================================================")
 	msg("Id: " + str(result["id"]))
 	msg("Name: " + str(result["name"]))
@@ -151,7 +149,7 @@ func _on_log_channel_info_button_pressed() -> void:
 
 func _on_log_channel_permissions_button_pressed() -> void:
 	msg("[i]discord.command_get_channel_permissions()[/i]")
-	var result = await discord.command_get_channel_permissions()
+	var result := await discord.command_get_channel_permissions()
 	msg("[Channel Permissions] ==============================================")
 	msg("Permissions: " + str(result["permissions"]))
 	msg("[/Channel Permissions] =============================================")
@@ -159,7 +157,7 @@ func _on_log_channel_permissions_button_pressed() -> void:
 
 func _on_log_platform_behaviors_button_pressed() -> void:
 	msg("[i]discord.command_get_platform_behaviors()[/i]")
-	var result = await discord.command_get_platform_behaviors()
+	var result := await discord.command_get_platform_behaviors()
 	msg("[Platform Behaviors] ===============================================")
 	for key in result:
 		msg(str(key) + ": " + str(result[key]))
@@ -168,28 +166,28 @@ func _on_log_platform_behaviors_button_pressed() -> void:
 
 func _on_log_user_locale_button_pressed() -> void:
 	msg("[i]discord.command_user_settings_get_locale()[/i]")
-	var result = await discord.command_user_settings_get_locale()
+	var result := await discord.command_user_settings_get_locale()
 	msg("[b]User Locale: [/b] " + result["locale"])
 
 
 func _on_initiate_image_upload_button_pressed() -> void:
-	var line_edit : LineEdit = $"%ShareMomentUrl"
+	var line_edit: LineEdit = $"%ShareMomentUrl"
 	msg("[i]discord.command_initiate_image_upload()[/i]")
-	var result = await discord.command_initiate_image_upload()
+	var result := await discord.command_initiate_image_upload()
 	msg("Image URL: " + str(result["image_url"]))
 	line_edit.text = str(result["image_url"])
 
 
 func _on_share_moment_button_pressed() -> void:
-	var line_edit : LineEdit = $"%ShareMomentUrl"
+	var line_edit: LineEdit = $"%ShareMomentUrl"
 	msg("[i]discord.command_open_share_moment_dialog()[/i]")
-	var _result = await discord.command_open_share_moment_dialog(line_edit.text)
+	var _result := await discord.command_open_share_moment_dialog(line_edit.text)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_invite_button_pressed() -> void:
 	msg("[i]discord.command_open_invite_dialog()[/i]")
-	var _result = await discord.command_open_invite_dialog()
+	var _result := await discord.command_open_invite_dialog()
 	msg("[i][b]no output[/b][/i]")
 
 
@@ -210,10 +208,10 @@ func _on_set_activity_button_pressed() -> void:
 	var secret_spectate    = $"%ActivitySpectateSecret".text
 	var instance           = $"%ActivityInstance".button_pressed
 
-	var timestamps = {}
-	var assets = {}
-	var party = {}
-	var secrets = {}
+	var timestamps := {}
+	var assets := {}
+	var party := {}
+	var secrets := {}
 
 	if (len(start_date) > 0):
 		timestamps["start"] = int(start_date)
@@ -245,7 +243,7 @@ func _on_set_activity_button_pressed() -> void:
 
 func _on_share_link_button_pressed() -> void:
 	msg("[i]discord.command_share_link()[/i]")
-	var result = await discord.command_share_link("Try out this sick activiy!", discord.user_id, "this is a cool custom id :)")
+	var result := await discord.command_share_link("Try out this sick activiy!", discord.user_id, "this is a cool custom id :)")
 	if (result["success"]):
 		msg("Message sent successfully!")
 	else:
@@ -253,8 +251,8 @@ func _on_share_link_button_pressed() -> void:
 
 
 func _on_oauth_authorize_button_pressed() -> void:
-	var scopes = []
-	var progress : ProgressBar = $"%OauthProgressBar"
+	var scopes := []
+	var progress: ProgressBar = $"%OauthProgressBar"
 	
 	if ($"%OauthScopeIdentify".button_pressed):
 		scopes.append("identify")
@@ -269,12 +267,12 @@ func _on_oauth_authorize_button_pressed() -> void:
 	
 	progress.value = 1
 	msg("Authorizing with scopes: " + str(scopes))
-	var auth = await discord.command_authorize("code", scopes, "")
+	var auth := await discord.command_authorize("code", scopes, "")
 	progress.value = 2
-	var hreq = HTTPRequest.new()
+	var hreq := HTTPRequest.new()
 	hreq.accept_gzip = false # ?? huh? https://forum.godotengine.org/t/-/37681/19
 	add_child(hreq)
-	var _token_res = hreq.request(
+	var _token_res := hreq.request(
 		"https://" + CLIENT_ID + ".discordsays.com/.proxy/api/auth",
 		["Content-Type: application/x-www-form-urlencoded"],
 		HTTPClient.METHOD_POST,
@@ -283,8 +281,8 @@ func _on_oauth_authorize_button_pressed() -> void:
 	var response = await hreq.request_completed
 	hreq.queue_free()
 	var json = response[3].get_string_from_utf8()
-	var token_json = JSON.parse_string(json)
-	var token = token_json["access_token"]
+	var token_json: Dictionary = JSON.parse_string(json)
+	var token: String = token_json["access_token"]
 	progress.value = 3
 	msg("Got access token")
 	var _authRes = await discord.command_authenticate(token)

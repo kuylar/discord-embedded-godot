@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cpe1pf8kvomjg"]
 
-[ext_resource type="Script" path="res://playground/participant.gd" id="1_5j4nq"]
+[ext_resource type="Script" uid="uid://cnxtlu1ogdm34" path="res://playground/participant.gd" id="1_5j4nq"]
 [ext_resource type="Texture2D" uid="uid://bw1ygjn8mbgck" path="res://icon.png" id="1_onoq3"]
 
 [node name="User" type="Panel"]
