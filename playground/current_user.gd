@@ -11,8 +11,8 @@ func _ready() -> void:
 
 
 func update(data: DiscordSDK.CurrentUserUpdateData) -> void:
-	username.text = data["global_name"] + "  [i](@" + data["username"] + ")[/i]"
-	flags.text = data["id"]
+	username.text = data.global_name + "  [i](@" + data.username + ")[/i]"
+	flags.text = data.id
 	
 	var http_request := HTTPRequest.new()
 	add_child(http_request)
