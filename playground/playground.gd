@@ -1,22 +1,20 @@
 extends Control
 
-const CLIENT_ID = "1219337474266894397"
+const CLIENT_ID := "1219337474266894397"
 
-@onready var discord : DiscordSDK = get_node("/root/Discord")
-@onready var log_node : RichTextLabel = $"HBoxContainer/VSplitContainer/Log"
-@onready var dispatch_log_node : RichTextLabel = $"%Dispatch"
-@onready var raw_dispatch_log_node : RichTextLabel = $"%Raw Dispatch"
+@onready var discord: DiscordSDK = get_node("/root/Discord")
+@onready var log_node: RichTextLabel = $"HBoxContainer/VSplitContainer/Log"
+@onready var dispatch_log_node: RichTextLabel = $"%Dispatch"
+@onready var raw_dispatch_log_node: RichTextLabel = $"%Raw Dispatch"
 
-var pip_interactivity_press_count = 0
+var pip_interactivity_press_count := 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	discord.init(CLIENT_ID)
 	
-	discord.connect("dispatch_any", Callable(self, "_dispatch"))
-	discord.connect("dispatch_current_user_update", Callable(self, "_user_updated"))
-	
-	discord.connect("dispatch_activity_layout_mode_update", Callable(self, "_pip_change"))
+	discord.dispatch_any.connect(_dispatch)
+	discord.dispatch_activity_layout_mode_update.connect(_pip_change)
 	
 	log_node.set_scroll_follow(true)
 
@@ -29,32 +27,39 @@ func msg_dispatch(event: String, message: String) -> void:
 	dispatch_log_node.text += "\n\n" + event + "\n" + message
 
 
-func _dispatch(event, data) -> void:
+func _dispatch(event: String, data_raw: Object) -> void:
 	raw_dispatch_log_node.text += "\n[ " + event + " ]\n"
-	raw_dispatch_log_node.text += str(data)
+	raw_dispatch_log_node.text += str(data_raw)
 	raw_dispatch_log_node.text += "\n======================================"
 	
 	match event:
 		"READY":
-			msg_dispatch(event, "Dispatch is ready!\nVersion: %s\nCDN Host: %s\nAPI Endpoint: %s\nEnvironment: %s" % [data["v"], data["config"]["cdn_host"], data["config"]["api_endpoint"], data["config"]["environment"]])
+			var data := data_raw as DiscordSDK.ReadyEventData
+			msg_dispatch(event, "Dispatch is ready!\nVersion: %s\nCDN Host: %s\nAPI Endpoint: %s\nEnvironment: %s" % [data.v, data.config.cdn_host, data.config.api_endpoint, data.config.environment])
 		"VOICE_STATE_UPDATE":
-			msg_dispatch(event, "%s's voice state changed!\nMuted: %s\nVolume: %s\nPan: %s - %s" % [data["nick"], str(data["mute"]), str(data["volume"]), str(data["pan"]["left"]), str(data["pan"]["right"])])
+			var data := data_raw as DiscordSDK.VoiceStateUpdateData
+			msg_dispatch(event, "%s's voice state changed!\nMuted: %s\nVolume: %s\nPan: %s - %s" % [data.nick, str(data.mute), str(data.volume), str(data.pan.left), str(data.pan.right)])
 		"SPEAKING_START":
-			msg_dispatch(event, "User with ID %s started speaking" % [data["user_id"]])
+			var data := data_raw as DiscordSDK.SpeakingEventData
+			msg_dispatch(event, "User with ID %s started speaking" % [data.user_id])
 		"SPEAKING_STOP":
-			msg_dispatch(event, "User with ID %s stopped speaking" % [data["user_id"]])
+			var data := data_raw as DiscordSDK.SpeakingEventData
+			msg_dispatch(event, "User with ID %s stopped speaking" % [data.user_id])
 		"ACTIVITY_LAYOUT_MODE_UPDATE":
-			if (data["layout_mode"] == 1):
+			var data := data_raw as DiscordSDK.ActivityLayoutModeUpdateData
+			if data.layout_mode == 1:
 				msg_dispatch(event, "Activity is now in PiP mode")
 			else:
 				msg_dispatch(event, "Activity is no longer in PiP mode")
 		"ORIENTATION_UPDATE":
-			msg_dispatch(event, "Orientation is now %s" % ["landscape" if data["screen_orientation"] == 1 else "portrait"])
+			var data := data_raw as DiscordSDK.OrientationUpdateData
+			msg_dispatch(event, "Orientation is now %s" % ["landscape" if data.screen_orientation == 1 else "portrait"])
 		"CURRENT_USER_UPDATE":
 			msg_dispatch(event, "Current user updated")
 		"THERMAL_STATE_UPDATE":
+			var data := data_raw as DiscordSDK.ThermalStateUpdateData
 			var states = ["normal", "fair", "serious", "critical"]
-			msg_dispatch(event, "Thermal state is now %s" % [states[data["thermal_state"]]])
+			msg_dispatch(event, "Thermal state is now %s" % [states[data.thermal_state]])
 		"ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE":
 			msg_dispatch(event, "Participants updated")
 		"ENTITLEMENT_CREATE":
@@ -65,23 +70,23 @@ func _dispatch(event, data) -> void:
 			msg_dispatch(event, "Unknown event")
 
 
-func _pip_change(data) -> void:
-	if (data["layout_mode"] == 1):
+func _pip_change(data: DiscordSDK.ActivityLayoutModeUpdateData) -> void:
+	if data.layout_mode == 1:
 		$"%PipOverlay".visible = true
 	else:
 		$"%PipOverlay".visible = false
 
 
 func _on_set_config_button_pressed() -> void:
-	var config = $"%PipInteractivityState".get_selected_id() == 1
-	msg("[i]discord.command_set_config(" + str(config) + ")[/i]")
-	var _result = await discord.command_set_config(config)
+	var config: bool = $"%PipInteractivityState".get_selected_id() == 1
+	msg("[i]discord.command_set_config(%s)[/i]" % str(config))
+	var _result := await discord.command_set_config(config)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_capture_log_button_pressed() -> void:
-	var level_id = $"%LogLevel".get_selected_id()
-	var level = "log"
+	var level_id: int = $"%LogLevel".get_selected_id()
+	var level := "log"
 	match level_id:
 		0:
 			level = "log"
@@ -93,103 +98,103 @@ func _on_capture_log_button_pressed() -> void:
 			level = "info"
 		4:
 			level = "error"
-	var message = $"%LogMessage".text
-	msg("[i]discord.command_capture_log(\"" + level + "\", \"" + message + "\")[/i]")
-	var _result = await discord.command_capture_log(level, message)
+	var message: String = $"%LogMessage".text
+	msg("[i]discord.command_capture_log(%s, %s)[/i]" % [level, message])
+	await discord.command_capture_log(level, message)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_encourage_hw_accel_pressed() -> void:
 	msg("[i]discord.command_encourage_hardware_acceleration()[/i]")
-	var result = await discord.command_encourage_hardware_acceleration()
-	msg("Hardware acceleration is: " + ("Enabled" if result["enabled"] else "Disabled"))
+	var result := await discord.command_encourage_hardware_acceleration()
+	msg("Hardware acceleration is: " + ("Enabled" if result.enabled else "Disabled"))
 
 
 func _on_external_url_button_pressed() -> void:
-	var url = $"%ExternalUrlInput".text
-	msg("[i]discord.command_open_external_link(" + str(url) + ")[/i]")
-	var result = await discord.command_open_external_link(url)
-	if (result["opened"]):
+	var url: String = $"%ExternalUrlInput".text
+	msg("[i]discord.command_open_external_link(%s)[/i]" % str(url))
+	var result := await discord.command_open_external_link(url)
+	if result.opened:
 		msg("URL opened")
 	else:
 		msg("URL did not open")
 
 
 func _on_set_orientation_lock_button_pressed() -> void:
-	var lock_state = -1 if $"%LockState".get_selected_id() == 0 else $"%LockState".get_selected_id()
-	var pip_lock_state = -1 if $"%PipLockState".get_selected_id() == 0 else $"%PipLockState".get_selected_id()
-	var grid_lock_state = -1 if $"%GridLockState".get_selected_id() == 0 else $"%GridLockState".get_selected_id()
+	var lock_state: int = -1 if $"%LockState".get_selected_id() == 0 else $"%LockState".get_selected_id()
+	var pip_lock_state: int = -1 if $"%PipLockState".get_selected_id() == 0 else $"%PipLockState".get_selected_id()
+	var grid_lock_state: int = -1 if $"%GridLockState".get_selected_id() == 0 else $"%GridLockState".get_selected_id()
 
-	msg("[i]discord.command_set_orientation_lock_state(" + str(lock_state) + ", " + str(pip_lock_state) + ", " + str(grid_lock_state) + ")[/i]")
-	var _result = await discord.command_set_orientation_lock_state(lock_state, pip_lock_state, grid_lock_state)
+	msg("[i]discord.command_set_orientation_lock_state(%s, %s, %s)[/i]" % [lock_state, pip_lock_state, grid_lock_state])
+	await discord.command_set_orientation_lock_state(lock_state, pip_lock_state, grid_lock_state)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_log_channel_info_button_pressed() -> void:
-	msg("[i]discord.command_get_channel(" + str(discord.channel_id) + ")[/i]")
-	var result = await discord.command_get_channel(discord.channel_id)
+	msg("[i]discord.command_get_channel(%s)[/i]" % str(discord.channel_id))
+	var result := await discord.command_get_channel(discord.channel_id)
 	msg("[Channel Info] =====================================================")
-	msg("Id: " + str(result["id"]))
-	msg("Name: " + str(result["name"]))
-	msg("Type: " + str(result["type"]))
-	msg("Topic: " + str(result["topic"]))
-	msg("Bitrate: " + str(result["bitrate"]))
-	msg("User Limit: " + str(result["user_limit"]))
-	msg("Guild Id: " + str(result["guild_id"]))
-	msg("Position: " + str(result["position"]))
+	msg("Id: " + str(result.id))
+	msg("Name: " + str(result.name))
+	msg("Type: " + str(result.type))
+	msg("Topic: " + str(result.topic))
+	msg("Bitrate: " + str(result.bitrate))
+	msg("User Limit: " + str(result.user_limit))
+	msg("Guild Id: " + str(result.guild_id))
+	msg("Position: " + str(result.position))
 	msg("[Voice States]")
-	for state in result["voice_states"]:
-		msg("- Nick: " + str(state["nick"]))
-		msg("  Muted: " + str(state["mute"]))
-		msg("  Volume: " + str(state["volume"]))
+	for state in result.voice_states:
+		msg("- Nick: " + str(state.nick))
+		msg("  Muted: " + str(state.mute))
+		msg("  Volume: " + str(state.volume))
 		msg("  Pan:")
-		msg("    Left: " + str(state["pan"]["left"]))
-		msg("    Right: " + str(state["pan"]["right"]))
+		msg("    Left: " + str(state.pan.left))
+		msg("    Right: " + str(state.pan.right))
 	msg("[/Voice States]")
 	msg("[/Channel Info] ====================================================")
 
 
 func _on_log_channel_permissions_button_pressed() -> void:
 	msg("[i]discord.command_get_channel_permissions()[/i]")
-	var result = await discord.command_get_channel_permissions()
+	var result := await discord.command_get_channel_permissions()
 	msg("[Channel Permissions] ==============================================")
-	msg("Permissions: " + str(result["permissions"]))
+	msg("Permissions: " + str(result.permissions))
 	msg("[/Channel Permissions] =============================================")
 
 
 func _on_log_platform_behaviors_button_pressed() -> void:
 	msg("[i]discord.command_get_platform_behaviors()[/i]")
-	var result = await discord.command_get_platform_behaviors()
+	var result := await discord.command_get_platform_behaviors()
 	msg("[Platform Behaviors] ===============================================")
-	for key in result:
-		msg(str(key) + ": " + str(result[key]))
+	if result.ios_keyboard_resizes_view != null:
+		msg("ios_keyboard_resizes_view: " + str(result.ios_keyboard_resizes_view))
 	msg("[/Platform Behaviors] ==============================================")
 
 
 func _on_log_user_locale_button_pressed() -> void:
 	msg("[i]discord.command_user_settings_get_locale()[/i]")
-	var result = await discord.command_user_settings_get_locale()
-	msg("[b]User Locale: [/b] " + result["locale"])
+	var result := await discord.command_user_settings_get_locale()
+	msg("[b]User Locale: [/b] " + result.locale)
 
 
 func _on_initiate_image_upload_button_pressed() -> void:
-	var line_edit : LineEdit = $"%ShareMomentUrl"
+	var line_edit: LineEdit = $"%ShareMomentUrl"
 	msg("[i]discord.command_initiate_image_upload()[/i]")
-	var result = await discord.command_initiate_image_upload()
-	msg("Image URL: " + str(result["image_url"]))
-	line_edit.text = str(result["image_url"])
+	var result := await discord.command_initiate_image_upload()
+	msg("Image URL: " + str(result.image_url))
+	line_edit.text = str(result.image_url)
 
 
 func _on_share_moment_button_pressed() -> void:
-	var line_edit : LineEdit = $"%ShareMomentUrl"
+	var line_edit: LineEdit = $"%ShareMomentUrl"
 	msg("[i]discord.command_open_share_moment_dialog()[/i]")
-	var _result = await discord.command_open_share_moment_dialog(line_edit.text)
+	await discord.command_open_share_moment_dialog(line_edit.text)
 	msg("[i][b]no output[/b][/i]")
 
 
 func _on_invite_button_pressed() -> void:
 	msg("[i]discord.command_open_invite_dialog()[/i]")
-	var _result = await discord.command_open_invite_dialog()
+	await discord.command_open_invite_dialog()
 	msg("[i][b]no output[/b][/i]")
 
 
@@ -210,81 +215,81 @@ func _on_set_activity_button_pressed() -> void:
 	var secret_spectate    = $"%ActivitySpectateSecret".text
 	var instance           = $"%ActivityInstance".button_pressed
 
-	var timestamps = {}
-	var assets = {}
-	var party = {}
-	var secrets = {}
+	var timestamps := {}
+	var assets := {}
+	var party := {}
+	var secrets := {}
 
-	if (len(start_date) > 0):
+	if len(start_date) > 0:
 		timestamps["start"] = int(start_date)
-	if (len(end_date) > 0):
+	if len(end_date) > 0:
 		timestamps["end"] = int(end_date)
-	if (len(small_image) > 0):
+	if len(small_image) > 0:
 		assets["small_image"] = str(small_image)
-	if (len(small_image_text) > 0):
+	if len(small_image_text) > 0:
 		assets["small_text"] = str(small_image_text)
-	if (len(large_image) > 0):
+	if len(large_image) > 0:
 		assets["large_image"] = str(large_image)
-	if (len(large_image_text) > 0):
+	if len(large_image_text) > 0:
 		assets["large_text"] = str(large_image_text)
-	if (len(party_id) > 0):
+	if len(party_id) > 0:
 		party["id"] = party_id
-	if (len(party_member_count) > 0 or len(party_member_max) > 0):
+	if len(party_member_count) > 0 or len(party_member_max) > 0:
 		party["size"] = [
 			int(party_member_count),
 			int(party_member_max)
 		]
-	if (len(secret_match) > 0):
+	if len(secret_match) > 0:
 		secrets["match"] = secret_match
-	if (len(secret_join) > 0):
+	if len(secret_join) > 0:
 		secrets["join"] = secret_join
-	if (len(secret_spectate) > 0):
+	if len(secret_spectate) > 0:
 		secrets["spectate"] = secret_spectate
 	discord.command_set_activity(state, details, timestamps, assets, party, secrets, instance)
 
 
 func _on_share_link_button_pressed() -> void:
 	msg("[i]discord.command_share_link()[/i]")
-	var result = await discord.command_share_link("Try out this sick activiy!", discord.user_id, "this is a cool custom id :)")
-	if (result["success"]):
+	var result := await discord.command_share_link("Try out this sick activiy!", discord.user_id, "this is a cool custom id :)")
+	if result.success:
 		msg("Message sent successfully!")
 	else:
 		msg("User cancelled the prompt :( this is a sad day")
 
 
 func _on_oauth_authorize_button_pressed() -> void:
-	var scopes = []
-	var progress : ProgressBar = $"%OauthProgressBar"
+	var scopes := []
+	var progress: ProgressBar = $"%OauthProgressBar"
 	
-	if ($"%OauthScopeIdentify".button_pressed):
+	if $"%OauthScopeIdentify".button_pressed:
 		scopes.append("identify")
-	if ($"%OauthScopeGuilds".button_pressed):
+	if $"%OauthScopeGuilds".button_pressed:
 		scopes.append("guilds")
-	if ($"%OauthScopeActivitiesWrite".button_pressed):
+	if $"%OauthScopeActivitiesWrite".button_pressed:
 		scopes.append("rpc.activities.write")
-	if ($"%OauthScopeVoiceRead".button_pressed):
+	if $"%OauthScopeVoiceRead".button_pressed:
 		scopes.append("rpc.voice.read")
-	if ($"%OauthScopeMembersRead".button_pressed):
+	if $"%OauthScopeMembersRead".button_pressed:
 		scopes.append("guilds.members.read")
 	
 	progress.value = 1
 	msg("Authorizing with scopes: " + str(scopes))
-	var auth = await discord.command_authorize("code", scopes, "")
+	var auth := await discord.command_authorize("code", scopes, "")
 	progress.value = 2
-	var hreq = HTTPRequest.new()
+	var hreq := HTTPRequest.new()
 	hreq.accept_gzip = false # ?? huh? https://forum.godotengine.org/t/-/37681/19
 	add_child(hreq)
-	var _token_res = hreq.request(
-		"https://" + CLIENT_ID + ".discordsays.com/.proxy/api/auth",
+	var _token_res := hreq.request(
+		"https://%s.discordsays.com/.proxy/api/auth" % CLIENT_ID,
 		["Content-Type: application/x-www-form-urlencoded"],
 		HTTPClient.METHOD_POST,
 		"code=" + auth["code"]
 	)
 	var response = await hreq.request_completed
 	hreq.queue_free()
-	var json = response[3].get_string_from_utf8()
-	var token_json = JSON.parse_string(json)
-	var token = token_json["access_token"]
+	var json: String = response[3].get_string_from_utf8()
+	var token_json: Dictionary = JSON.parse_string(json)
+	var token: String = token_json["access_token"]
 	progress.value = 3
 	msg("Got access token")
 	var _authRes = await discord.command_authenticate(token)

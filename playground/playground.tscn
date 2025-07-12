@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://cpo3ygbiavdgb"]
 
 [ext_resource type="Texture2D" uid="uid://bw1ygjn8mbgck" path="res://icon.png" id="1_3ml1p"]
-[ext_resource type="Script" path="res://playground/playground.gd" id="1_jqnx3"]
-[ext_resource type="Script" path="res://playground/current_user.gd" id="2_m88sq"]
-[ext_resource type="Script" path="res://playground/participants_container.gd" id="2_rr0wr"]
+[ext_resource type="Script" uid="uid://s1ukco43qu4p" path="res://playground/playground.gd" id="1_jqnx3"]
+[ext_resource type="Script" uid="uid://bj8mpjo3wq31u" path="res://playground/current_user.gd" id="2_m88sq"]
+[ext_resource type="Script" uid="uid://jhba77p51u6f" path="res://playground/participants_container.gd" id="2_rr0wr"]
 
 [node name="Playground" type="Control"]
 layout_mode = 3
@@ -113,6 +113,7 @@ selected = 0
 fit_to_longest_item = false
 item_count = 2
 popup/item_0/text = "PiP window is not interactive"
+popup/item_0/id = 0
 popup/item_1/text = "PiP window is interactive"
 popup/item_1/id = 1
 
@@ -132,6 +133,7 @@ layout_mode = 2
 selected = 0
 item_count = 5
 popup/item_0/text = "Log"
+popup/item_0/id = 0
 popup/item_1/text = "Warning"
 popup/item_1/id = 1
 popup/item_2/text = "Debug"
@@ -195,6 +197,7 @@ selected = 0
 fit_to_longest_item = false
 item_count = 4
 popup/item_0/text = "Unhandled"
+popup/item_0/id = 0
 popup/item_1/text = "Unlocked"
 popup/item_1/id = 1
 popup/item_2/text = "Portrait"
@@ -210,6 +213,7 @@ selected = 0
 fit_to_longest_item = false
 item_count = 4
 popup/item_0/text = "Unhandled"
+popup/item_0/id = 0
 popup/item_1/text = "Unlocked"
 popup/item_1/id = 1
 popup/item_2/text = "Portrait"
@@ -225,6 +229,7 @@ selected = 0
 fit_to_longest_item = false
 item_count = 4
 popup/item_0/text = "Unhandled"
+popup/item_0/id = 0
 popup/item_1/text = "Unlocked"
 popup/item_1/id = 1
 popup/item_2/text = "Portrait"
