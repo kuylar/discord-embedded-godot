@@ -36,7 +36,7 @@ signal dispatch_thermal_state_update(data: ThermalStateUpdateData)
 ## Receives a [DiscordSDK.ParticipantsUpdateData]
 signal dispatch_activity_instance_participants_update(data: ParticipantsUpdateData)
 
-## Receives a [DiscordSDK.CurrentGuildMemberUpdate]
+## Receives a [DiscordSDK.CurrentGuildMemberUpdateData]
 signal dispatch_current_guild_member_update(data: CurrentGuildMemberUpdateData)
 
 ## Receives a [Dictionary]. This should be replaced by a proper type when its later added.
