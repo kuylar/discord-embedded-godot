@@ -36,8 +36,8 @@ signal dispatch_thermal_state_update(data: ThermalStateUpdateData)
 ## Receives a [DiscordSDK.ParticipantsUpdateData]
 signal dispatch_activity_instance_participants_update(data: ParticipantsUpdateData)
 
-## Receives a [DiscordSDK.CurrentUserUpdateData]
-signal dispatch_current_guild_member_update(data: CurrentUserUpdateData)
+## Receives a [DiscordSDK.CurrentGuildMemberUpdate]
+signal dispatch_current_guild_member_update(data: CurrentGuildMemberUpdate)
 
 ## Receives a [Dictionary]. This should be replaced by a proper type when its later added.
 signal dispatch_entitlement_create(data: Dictionary)
@@ -125,6 +125,7 @@ class OrientationUpdateData:
 ## Event data for [signal dispatch_current_user_update]
 class CurrentUserUpdateData:
 	var user_id: String
+	var global_name: String
 	var nick: String
 	var guild_id: String
 	var avatar: String
@@ -143,6 +144,21 @@ class ThermalStateUpdateData:
 	static func decode(dict: Dictionary) -> ThermalStateUpdateData:
 		var data := ThermalStateUpdateData.new()
 		DiscordSDK._decode_simple(dict, data)
+		return data
+
+## Event data for [signal dispatch_current_guild_member_update]
+class CurrentGuildMemberUpdate:
+	var user_id: String
+	var nick: String
+	var guild_id: String
+	var avatar: String
+	var color_string: String
+	var avatar_decoration_data: DiscordAvatarDecorationData
+	static func decode(dict: Dictionary) -> CurrentUserUpdateData:
+		var data := CurrentUserUpdateData.new()
+		DiscordSDK._decode_simple(dict, data)
+		if dict.get("avatar_decoration_data") != null:
+			data.avatar_decoration_data = DiscordAvatarDecorationData.decode(dict["avatar_decoration_data"])
 		return data
 
 ## Event data for [signal dispatch_activity_instance_participants_update]
@@ -945,7 +961,7 @@ func _handle_dispatch(data):
 			dispatch_any.emit(event, data["data"] as Dictionary)
 			dispatch_entitlement_create.emit(data["data"] as Dictionary)
 		"CURRENT_GUILD_MEMBER_UPDATE":
-			var event_data := CurrentUserUpdateData.decode(data["data"])
+			var event_data := CurrentGuildMemberUpdate.decode(data["data"])
 			dispatch_any.emit(event, event_data)
 			dispatch_current_guild_member_update.emit(event_data)
 		_:
