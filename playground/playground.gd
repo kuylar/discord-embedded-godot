@@ -275,6 +275,12 @@ func _on_oauth_authorize_button_pressed() -> void:
 	progress.value = 1
 	msg("Authorizing with scopes: " + str(scopes))
 	var auth := await discord.command_authorize("code", scopes, "")
+
+    if (auth["code"].length() == 0):
+        progress.value = 0
+        msg("Auth flow cancelled!")
+        return
+
 	progress.value = 2
 	var hreq := HTTPRequest.new()
 	hreq.accept_gzip = false # ?? huh? https://forum.godotengine.org/t/-/37681/19
