@@ -51,9 +51,6 @@ func _dispatch(event: String, data_raw: Object) -> void:
 				msg_dispatch(event, "Activity is now in PiP mode")
 			else:
 				msg_dispatch(event, "Activity is no longer in PiP mode")
-		"ORIENTATION_UPDATE":
-			var data := data_raw as DiscordSDK.OrientationUpdateData
-			msg_dispatch(event, "Orientation is now %s" % ["landscape" if data.screen_orientation == 1 else "portrait"])
 		"CURRENT_USER_UPDATE":
 			msg_dispatch(event, "Current user updated")
 		"THERMAL_STATE_UPDATE":
@@ -276,10 +273,10 @@ func _on_oauth_authorize_button_pressed() -> void:
 	msg("Authorizing with scopes: " + str(scopes))
 	var auth := await discord.command_authorize("code", scopes, "")
 
-    if (auth["code"].length() == 0):
-        progress.value = 0
-        msg("Auth flow cancelled!")
-        return
+	if (auth["code"].length() == 0):
+		progress.value = 0
+		msg("Auth flow cancelled!")
+		return
 
 	progress.value = 2
 	var hreq := HTTPRequest.new()

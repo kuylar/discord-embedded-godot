@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpo3ygbiavdgb"]
+[gd_scene format=3 uid="uid://cpo3ygbiavdgb"]
 
 [ext_resource type="Texture2D" uid="uid://bw1ygjn8mbgck" path="res://icon.png" id="1_3ml1p"]
 [ext_resource type="Script" uid="uid://s1ukco43qu4p" path="res://playground/playground.gd" id="1_jqnx3"]
 [ext_resource type="Script" uid="uid://bj8mpjo3wq31u" path="res://playground/current_user.gd" id="2_m88sq"]
 [ext_resource type="Script" uid="uid://jhba77p51u6f" path="res://playground/participants_container.gd" id="2_rr0wr"]
 
-[node name="Playground" type="Control"]
+[node name="Playground" type="Control" unique_id=411342855]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jqnx3")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=104762178]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,11 +22,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="HBoxContainer"]
+[node name="Panel" type="Panel" parent="HBoxContainer" unique_id=1945955060]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel" unique_id=2046495269]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,26 +34,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/Panel/VBoxContainer"]
+[node name="Label" type="Label" parent="HBoxContainer/Panel/VBoxContainer" unique_id=2070911815]
 layout_mode = 2
 text = "Participants"
 horizontal_alignment = 1
 
-[node name="ParticipantsContainer" type="VBoxContainer" parent="HBoxContainer/Panel/VBoxContainer"]
+[node name="ParticipantsContainer" type="VBoxContainer" parent="HBoxContainer/Panel/VBoxContainer" unique_id=803941928]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("2_rr0wr")
 
-[node name="InviteButton" type="Button" parent="HBoxContainer/Panel/VBoxContainer"]
+[node name="InviteButton" type="Button" parent="HBoxContainer/Panel/VBoxContainer" unique_id=467327361]
 layout_mode = 2
 text = "+ Invite Others"
 
-[node name="CurrentUser" type="Panel" parent="HBoxContainer/Panel/VBoxContainer"]
+[node name="CurrentUser" type="Panel" parent="HBoxContainer/Panel/VBoxContainer" unique_id=1282586386]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 script = ExtResource("2_m88sq")
 
-[node name="Avatar" type="TextureRect" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser"]
+[node name="Avatar" type="TextureRect" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser" unique_id=149424463]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -67,7 +67,7 @@ texture = ExtResource("1_3ml1p")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Name" type="RichTextLabel" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser"]
+[node name="Name" type="RichTextLabel" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser" unique_id=1476566772]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 5.0
@@ -76,7 +76,7 @@ offset_bottom = 28.0
 bbcode_enabled = true
 text = "DiscordEmbeddedGodot"
 
-[node name="Flags" type="RichTextLabel" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser"]
+[node name="Flags" type="RichTextLabel" parent="HBoxContainer/Panel/VBoxContainer/CurrentUser" unique_id=1225554768]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 30.0
@@ -85,27 +85,27 @@ offset_bottom = 53.0
 bbcode_enabled = true
 text = "[i]by @kuylar[/i]"
 
-[node name="VSplitContainer" type="VSplitContainer" parent="HBoxContainer"]
+[node name="VSplitContainer" type="VSplitContainer" parent="HBoxContainer" unique_id=419327639]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TabContainer" type="TabContainer" parent="HBoxContainer/VSplitContainer"]
+[node name="TabContainer" type="TabContainer" parent="HBoxContainer/VSplitContainer" unique_id=1518329225]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 current_tab = 2
 
-[node name="General" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+[node name="General" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer" unique_id=283159718]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=926142472]
 layout_mode = 2
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=1028397596]
 layout_mode = 2
 
-[node name="PipInteractivityState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4"]
+[node name="PipInteractivityState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4" unique_id=361292187]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -117,17 +117,17 @@ popup/item_0/id = 0
 popup/item_1/text = "PiP window is interactive"
 popup/item_1/id = 1
 
-[node name="SetConfigButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4"]
+[node name="SetConfigButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer4" unique_id=1797935709]
 layout_mode = 2
 text = "Set Config"
 
-[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=252579613]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=1170579531]
 layout_mode = 2
 
-[node name="LogLevel" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer"]
+[node name="LogLevel" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer" unique_id=1758624216]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -143,53 +143,53 @@ popup/item_3/id = 3
 popup/item_4/text = "Error"
 popup/item_4/id = 4
 
-[node name="LogMessage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer"]
+[node name="LogMessage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer" unique_id=1370947619]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Message"
 
-[node name="CaptureLogButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="CaptureLogButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=555262636]
 layout_mode = 2
 text = "Log Message"
 
-[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=1875228400]
 layout_mode = 2
 
-[node name="EncourageHwAccel" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="EncourageHwAccel" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=1907765060]
 layout_mode = 2
 text = "Encourage Hardware Accelaration"
 
-[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=2064672802]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=1355621093]
 layout_mode = 2
 
-[node name="ExternalUrlInput" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2"]
+[node name="ExternalUrlInput" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2" unique_id=1054457878]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "https://github.com/kuylar/discord-embedded-godot"
 placeholder_text = "https://"
 
-[node name="ExternalUrlButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2"]
+[node name="ExternalUrlButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer2" unique_id=268829013]
 layout_mode = 2
 text = "Open External URL"
 
-[node name="HSeparator4" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HSeparator4" type="HSeparator" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=489923732]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=148668867]
 layout_mode = 2
 text = "Orientation Lock State (Mobile Only)
 (Fullscreen - PiP - Grid)
 "
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/General" unique_id=1167347237]
 layout_mode = 2
 
-[node name="LockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+[node name="LockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3" unique_id=558002555]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -205,7 +205,7 @@ popup/item_2/id = 2
 popup/item_3/text = "Landscape"
 popup/item_3/id = 3
 
-[node name="PipLockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+[node name="PipLockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3" unique_id=1746248541]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -221,7 +221,7 @@ popup/item_2/id = 2
 popup/item_3/text = "Landscape"
 popup/item_3/id = 3
 
-[node name="GridLockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+[node name="GridLockState" type="OptionButton" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3" unique_id=1008024755]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -237,206 +237,206 @@ popup/item_2/id = 2
 popup/item_3/text = "Landscape"
 popup/item_3/id = 3
 
-[node name="SetOrientationLockButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3"]
+[node name="SetOrientationLockButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/General/HBoxContainer3" unique_id=2146515626]
 layout_mode = 2
 text = "Set Orientation Lock State"
 
-[node name="Info" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+[node name="Info" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer" unique_id=2035190887]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="LogChannelInfoButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+[node name="LogChannelInfoButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info" unique_id=1035237527]
 layout_mode = 2
 text = "Log Channel Info"
 
-[node name="LogChannelPermissionsButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+[node name="LogChannelPermissionsButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info" unique_id=222622422]
 layout_mode = 2
 text = "Log Channel Permissions"
 
-[node name="LogPlatformBehaviorsButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+[node name="LogPlatformBehaviorsButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info" unique_id=597587258]
 layout_mode = 2
 text = "Log Platform Behaviors"
 
-[node name="LogUserLocaleButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info"]
+[node name="LogUserLocaleButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Info" unique_id=2113777579]
 layout_mode = 2
 text = "Log User Locale"
 
-[node name="Uploading - Sharing" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+[node name="Uploading - Sharing" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer" unique_id=332444528]
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing" unique_id=679153879]
 layout_mode = 2
 text = "Uploaded image URL"
 
-[node name="ShareMomentUrl" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+[node name="ShareMomentUrl" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing" unique_id=1369207051]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "https://cdn.discordapp.com/"
 
-[node name="Label2" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+[node name="Label2" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing" unique_id=1308484660]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "openShareMomentDialog() requires a Discord CDN URL. You can either use the \"Upload Image\" button or paste a URL yourself to the box above"
 autowrap_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing" unique_id=108231249]
 layout_mode = 2
 
-[node name="InitiateImageUploadButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer"]
+[node name="InitiateImageUploadButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer" unique_id=491811331]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Upload Image"
 
-[node name="ShareMomentButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer"]
+[node name="ShareMomentButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer" unique_id=153018348]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Share Moment"
 
-[node name="ShareActivityLink" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer"]
+[node name="ShareActivityLink" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Uploading - Sharing/HBoxContainer" unique_id=1366428752]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Share Activity Link"
 
-[node name="Activity" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+[node name="Activity" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer" unique_id=947908583]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="ActivityState" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="ActivityState" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=1708843055]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "State"
 
-[node name="ActivityDetails" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="ActivityDetails" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=847261619]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Details"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=1425973411]
 layout_mode = 2
 
-[node name="ActivityStartTimestamp" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer"]
+[node name="ActivityStartTimestamp" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer" unique_id=1926431020]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Start Timestamp (Unix Timestamp)"
 
-[node name="ActivityEndTimestamp" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer"]
+[node name="ActivityEndTimestamp" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer" unique_id=398576767]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "End Timestamp (Unix Timestamp)"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=2128486959]
 layout_mode = 2
 
-[node name="ActivityLargeImage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer2"]
+[node name="ActivityLargeImage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer2" unique_id=1335359333]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Large Image"
 
-[node name="ActivityLargeImageText" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer2"]
+[node name="ActivityLargeImageText" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer2" unique_id=55172799]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Large Image Hover Text"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=1476450157]
 layout_mode = 2
 
-[node name="ActivitySmallImage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer3"]
+[node name="ActivitySmallImage" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer3" unique_id=1824863421]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Small Image"
 
-[node name="ActivitySmallImageText" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer3"]
+[node name="ActivitySmallImageText" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer3" unique_id=615974642]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Small Image Hover Text"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=2033544906]
 layout_mode = 2
 
-[node name="ActivityPartyId" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4"]
+[node name="ActivityPartyId" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4" unique_id=2010054598]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Party ID"
 
-[node name="ActivityPartyMemberCount" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4"]
+[node name="ActivityPartyMemberCount" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4" unique_id=1528845371]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Party Member Count"
 
-[node name="ActivityMaxMemberCount" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4"]
+[node name="ActivityMaxMemberCount" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer4" unique_id=1219677004]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Party Max Member Count"
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=610756407]
 layout_mode = 2
 
-[node name="ActivityMatchSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5"]
+[node name="ActivityMatchSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5" unique_id=1845485496]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Match Secret"
 
-[node name="ActivityJoinSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5"]
+[node name="ActivityJoinSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5" unique_id=1524617794]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Join Secret"
 
-[node name="ActivitySpectateSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5"]
+[node name="ActivitySpectateSecret" type="LineEdit" parent="HBoxContainer/VSplitContainer/TabContainer/Activity/HBoxContainer5" unique_id=131582215]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Spectate Secret"
 
-[node name="ActivityInstance" type="CheckBox" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="ActivityInstance" type="CheckBox" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=2068430150]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Instanced"
 
-[node name="SetActivityButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Activity"]
+[node name="SetActivityButton" type="Button" parent="HBoxContainer/VSplitContainer/TabContainer/Activity" unique_id=76537244]
 layout_mode = 2
 text = "Set Activity"
 
-[node name="Monetization" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer"]
+[node name="Monetization" type="VBoxContainer" parent="HBoxContainer/VSplitContainer/TabContainer" unique_id=505191838]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Monetization"]
+[node name="Label" type="Label" parent="HBoxContainer/VSplitContainer/TabContainer/Monetization" unique_id=133158846]
 layout_mode = 2
 text = "As monetization is not enabled during the public preview, this tab isn't available."
 
-[node name="Raw Dispatch" type="RichTextLabel" parent="HBoxContainer/VSplitContainer/TabContainer"]
+[node name="Raw Dispatch" type="RichTextLabel" parent="HBoxContainer/VSplitContainer/TabContainer" unique_id=1365945902]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 scroll_following = true
 metadata/_tab_index = 5
 
-[node name="Log" type="RichTextLabel" parent="HBoxContainer/VSplitContainer"]
+[node name="Log" type="RichTextLabel" parent="HBoxContainer/VSplitContainer" unique_id=1496788834]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 bbcode_enabled = true
 text = "Log Output"
 
-[node name="Panel2" type="Panel" parent="HBoxContainer"]
+[node name="Panel2" type="Panel" parent="HBoxContainer" unique_id=2025328822]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Dispatch" type="RichTextLabel" parent="HBoxContainer/Panel2"]
+[node name="Dispatch" type="RichTextLabel" parent="HBoxContainer/Panel2" unique_id=313987166]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 1
@@ -449,7 +449,7 @@ text = "Dispatch Output"
 scroll_following = true
 autowrap_mode = 1
 
-[node name="PipOverlay" type="Panel" parent="."]
+[node name="PipOverlay" type="Panel" parent="." unique_id=1226580257]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -459,7 +459,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PipOverlay"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PipOverlay" unique_id=281086471]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -468,19 +468,19 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="PipOverlay/VBoxContainer"]
+[node name="Label" type="Label" parent="PipOverlay/VBoxContainer" unique_id=1520599691]
 layout_mode = 2
 text = "I'm tiny!
  "
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PipInteractivityTestButton" type="Button" parent="PipOverlay/VBoxContainer"]
+[node name="PipInteractivityTestButton" type="Button" parent="PipOverlay/VBoxContainer" unique_id=1611090910]
 unique_name_in_owner = true
 layout_mode = 2
 text = "I was pressed 0 times"
 
-[node name="OauthWindowBg" type="Panel" parent="."]
+[node name="OauthWindowBg" type="Panel" parent="." unique_id=1253762811]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -489,52 +489,53 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="OauthWindow" type="Window" parent="OauthWindowBg"]
+[node name="OauthWindow" type="Window" parent="OauthWindowBg" unique_id=402816145]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Authentication"
 initial_position = 1
 size = Vector2i(300, 265)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="OauthWindowBg/OauthWindow"]
+[node name="VBoxContainer" type="VBoxContainer" parent="OauthWindowBg/OauthWindow" unique_id=2059375261]
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="Label" type="Label" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=1340791831]
 layout_mode = 2
 text = "Select Scopes"
 
-[node name="OauthScopeIdentify" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthScopeIdentify" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=1970012877]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 text = "identify"
 
-[node name="OauthScopeGuilds" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthScopeGuilds" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=729445627]
 unique_name_in_owner = true
 layout_mode = 2
 text = "guilds"
 
-[node name="OauthScopeActivitiesWrite" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthScopeActivitiesWrite" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=923075473]
 unique_name_in_owner = true
 layout_mode = 2
 text = "rpc.activities.write"
 
-[node name="OauthScopeVoiceRead" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthScopeVoiceRead" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=1812200079]
 unique_name_in_owner = true
 layout_mode = 2
 text = "rpc.voice.read"
 
-[node name="OauthScopeMembersRead" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthScopeMembersRead" type="CheckBox" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=1782636549]
 unique_name_in_owner = true
 layout_mode = 2
 text = "guilds.members.read"
 
-[node name="OauthAuthorizeButton" type="Button" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthAuthorizeButton" type="Button" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=174014832]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "Authenticate"
 
-[node name="OauthProgressBar" type="ProgressBar" parent="OauthWindowBg/OauthWindow/VBoxContainer"]
+[node name="OauthProgressBar" type="ProgressBar" parent="OauthWindowBg/OauthWindow/VBoxContainer" unique_id=484666791]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2

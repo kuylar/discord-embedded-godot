@@ -24,9 +24,6 @@ signal dispatch_speaking_stop(data: SpeakingEventData)
 ## Receives a [DiscordSDK.ActivityLayoutModeUpdateData]
 signal dispatch_activity_layout_mode_update(data: ActivityLayoutModeUpdateData)
 
-## Receives a [DiscordSDK.OrientationUpdateData]
-signal dispatch_orientation_update(data: OrientationUpdateData)
-
 ## Receives a [DiscordSDK.CurrentUserUpdateData]
 signal dispatch_current_user_update(data: CurrentUserUpdateData)
 
@@ -111,14 +108,6 @@ class ActivityLayoutModeUpdateData:
 	var layout_mode: int
 	static func decode(dict: Dictionary) -> ActivityLayoutModeUpdateData:
 		var data := ActivityLayoutModeUpdateData.new()
-		DiscordSDK._decode_simple(dict, data)
-		return data
-
-## Event data for [signal dispatch_activity_layout_mode_update]
-class OrientationUpdateData:
-	var screen_orientation: int
-	static func decode(dict: Dictionary) -> OrientationUpdateData:
-		var data := OrientationUpdateData.new()
 		DiscordSDK._decode_simple(dict, data)
 		return data
 
@@ -896,7 +885,7 @@ var subscribed := false
 var in_js := false
 
 var _events := ["VOICE_STATE_UPDATE", "SPEAKING_START", "SPEAKING_STOP",
-	"ACTIVITY_LAYOUT_MODE_UPDATE", "ORIENTATION_UPDATE", "CURRENT_USER_UPDATE",
+	"ACTIVITY_LAYOUT_MODE_UPDATE", "CURRENT_USER_UPDATE",
 	"THERMAL_STATE_UPDATE", "ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE", "ENTITLEMENT_CREATE",
 	"CURRENT_GUILD_MEMBER_UPDATE"]
 
@@ -943,10 +932,6 @@ func _handle_dispatch(data):
 			var event_data := ActivityLayoutModeUpdateData.decode(data["data"])
 			dispatch_any.emit(event, event_data)
 			dispatch_activity_layout_mode_update.emit(event_data)
-		"ORIENTATION_UPDATE":
-			var event_data := OrientationUpdateData.decode(data["data"])
-			dispatch_any.emit(event, event_data)
-			dispatch_orientation_update.emit(event_data)
 		"CURRENT_USER_UPDATE":
 			user_id = data["data"]["id"]
 			var event_data := CurrentUserUpdateData.decode(data["data"])
